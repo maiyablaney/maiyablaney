@@ -1,6 +1,6 @@
 window.addEventListener("load", () => {
   // ----------------------------------------------------------
-  // Ticker Cloning Functions
+  // Ticker Cloning Functions (unchanged)
   // ----------------------------------------------------------
   function cloneTickerContent(containerSelector, contentSelector, multiplier) {
     const container = document.querySelector(containerSelector);
@@ -66,7 +66,7 @@ window.addEventListener("load", () => {
   window.addEventListener("resize", initTickers);
 
   // ----------------------------------------------------------
-  // Intro Section Effects & Transitions
+  // Intro Section Effects & Transitions (unchanged)
   // ----------------------------------------------------------
   function initIntroSection() {
     const codingContainer = document.querySelector('.coding-text');
@@ -105,8 +105,7 @@ MESSAGE_ID: 74B39A; RECIPIENT: COMMAND_CENTER_EAST; PRIORITY: HIGH;
 SUBJECT: OPERATIONAL_UPDATE; CONTENT: MISSION_OBJECTIVE_COMPLETE;
 CASUALTIES: ZERO; DAMAGE_ASSESSMENT: MINIMAL; RETURN_ETA: 17:00 HOURS;
 END_TRANSMISSION; REBOOT_SEQUENCE_INITIATED; SYSTEM_RESTORATION_COMPLETE;
-ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;
-`.trim();
+ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS`.trim();
     const prefillCount = 7000;
     let visibleText = codingText.slice(-prefillCount);
     codingParagraph.textContent = visibleText;
@@ -115,6 +114,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;
       visibleText += codingText[index];
       codingParagraph.textContent = visibleText;
       index = (index + 1) % codingText.length;
+      // Always force the text to stay scrolled to the bottom
       codingContainer.scrollTop = codingContainer.scrollHeight - codingContainer.clientHeight;
       setTimeout(typeLetter, 30);
     }
@@ -146,7 +146,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;
   initIntroSection();
 
   // ----------------------------------------------------------
-  // Section Transition & Album Video Scrubbing Setup
+  // Section Transition & Album Video Scrubbing Setup (unchanged)
   // ----------------------------------------------------------
   let currentSection = "intro";
   let accumulatedDelta = 0;
@@ -183,10 +183,47 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;
   updateAlbumVideo();
 
   // ----------------------------------------------------------
-  // Optimized Wheel Event Handling Using requestAnimationFrame
+  // Unified Wheel & Touch Event Handling
   // ----------------------------------------------------------
   let pendingDelta = 0;
   let scrollScheduled = false;
+
+  // For touch events on mobile
+  let touchStartY = null;
+  function onTouchStart(e) {
+    touchStartY = e.touches[0].clientY;
+  }
+  function onTouchMove(e) {
+    if (touchStartY === null) return;
+    let deltaY = touchStartY - e.touches[0].clientY;
+    pendingDelta += deltaY;
+    touchStartY = e.touches[0].clientY;
+    if (!scrollScheduled) {
+      scrollScheduled = true;
+      requestAnimationFrame(processWheel);
+    }
+    // Prevent default to stop native scrolling of the coding text
+    e.preventDefault();
+  }
+  function onTouchEnd(e) {
+    touchStartY = null;
+  }
+  window.addEventListener('touchstart', onTouchStart, { passive: false });
+  window.addEventListener('touchmove', onTouchMove, { passive: false });
+  window.addEventListener('touchend', onTouchEnd, { passive: false });
+
+  // Wheel event for non-touch devices
+  function onWheel(e) {
+    if (isTransitioning) return;
+    e.preventDefault();
+    pendingDelta += e.deltaY;
+    if (!scrollScheduled) {
+      scrollScheduled = true;
+      requestAnimationFrame(processWheel);
+    }
+  }
+  window.addEventListener('wheel', onWheel, { passive: false });
+
   function processWheel() {
     scrollScheduled = false;
     if (isTransitioning) {
@@ -268,8 +305,6 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;
       } else if (delta < 0) {
         targetAlbumProgress = Math.max(0, targetAlbumProgress + delta / SCROLL_THRESHOLD);
       }
-      // Modified reverse transition:
-      // Require a more intensive reverse scroll: accumulatedDelta must be <= -threshold * 2.0 before transitioning back.
       if (albumProgress <= 0.01 && delta < 0 && accumulatedDelta <= -threshold * 2.0) {
         isTransitioning = true;
         currentSection = "videos";
@@ -286,9 +321,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;
         }, 600);
         targetAlbumProgress = 0;
       }
-      
-      // Fade out album header elements and fade in pop-up images and their buttons.
-      const progress = albumProgress; // 0 to 1
+      const progress = albumProgress;
       document.querySelectorAll('.album-header, .album-outnow, .album-by, .album-icons')
         .forEach(el => {
           el.style.opacity = 1 - progress;
@@ -299,16 +332,4 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;
         });
     }
   }
-
-  function onWheel(e) {
-    if (isTransitioning) return;
-    e.preventDefault();
-    pendingDelta += e.deltaY;
-    if (!scrollScheduled) {
-      scrollScheduled = true;
-      requestAnimationFrame(processWheel);
-    }
-  }
-
-  window.addEventListener('wheel', onWheel, { passive: false });
 });
