@@ -150,7 +150,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
   // ----------------------------------------------------------
   let currentSection = "intro";
   let accumulatedDelta = 0;
-  const threshold = window.innerWidth < 600 ? 150 : 300;
+  const threshold = window.innerWidth < 600 ? 100 : 300;
   const finalRadiusPercent = 150;
   let isTransitioning = false;
   let lockAlbumTransition = true;
