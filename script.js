@@ -91,21 +91,7 @@ SUBJECT: OPERATIONAL_UPDATE; CONTENT: MISSION_OBJECTIVE_COMPLETE;
 CASUALTIES: ZERO; DAMAGE_ASSESSMENT: MINIMAL; RETURN_ETA: 17:00 HOURS;
 END_TRANSMISSION; REBOOT_SEQUENCE_INITIATED; SYSTEM_RESTORATION_COMPLETE;
 ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;
-INIT_SEQUENCE_START; PROTOCOL_OVERRIDE_ACTIVE; QUERY_ADDRESS: NODE_ALPHA_7;
-SYSTEM_DIAGNOSTIC_RUN; CORE_TEMP: 47.3C; VENTILATION_STATUS: OPTIMAL;
-ATMOSPHERIC_PRESSURE: 1013.25hPa; OXYGEN_LEVEL: 20.9%; VISUAL_FEED: ENGAGED;
-AUDIO_FEED: MUTED; TACTILE_FEED: OFFLINE; NETWORK_CONNECTIVITY: ESTABLISHED;
-DATA_STREAM_INTEGRITY: VALIDATED; SECURITY_PROTOCOL: LEVEL_7; FIREWALL_STATUS: ACTIVE;
-INTRUSION_DETECTION: MONITORING; MALWARE_SCAN: COMPLETE; SYSTEM_CLOCK: SYNC_2077.10.27.14.32.57;
-GEO_LOCATION: LAT: 34.0522; LONG: -118.2437; POWER_LEVEL: 98%; BACKUP_SYSTEM: ONLINE;
-EMERGENCY_PROTOCOL: STANDBY; OVERRIDE_CODE: ALPHA_DELTA_CHARLIE_9; TARGET_ACQUISITION: LOCKED;
-WEAPON_STATUS: ARMED; SHIELD_STATUS: ONLINE; PROPULSION_SYSTEM: ENGAGED;
-NAVIGATION_COORDINATES: X: 42.7; Y: 19.3; Z: 88.1; COMM_CHANNEL: SECURE_1;
-MESSAGE_ID: 74B39A; RECIPIENT: COMMAND_CENTER_EAST; PRIORITY: HIGH;
-SUBJECT: OPERATIONAL_UPDATE; CONTENT: MISSION_OBJECTIVE_COMPLETE;
-CASUALTIES: ZERO; DAMAGE_ASSESSMENT: MINIMAL; RETURN_ETA: 17:00 HOURS;
-END_TRANSMISSION; REBOOT_SEQUENCE_INITIATED; SYSTEM_RESTORATION_COMPLETE;
-ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim();
+...`.trim();
     const prefillCount = 2000;
     let visibleText = codingText.slice(-prefillCount);
     codingParagraph.textContent = visibleText;
@@ -114,7 +100,6 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
       visibleText += codingText[index];
       codingParagraph.textContent = visibleText;
       index = (index + 1) % codingText.length;
-      // Always force the text to stay scrolled to the bottom
       codingContainer.scrollTop = codingContainer.scrollHeight - codingContainer.clientHeight;
       setTimeout(typeLetter, 30);
     }
@@ -168,7 +153,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
   const SMOOTHING_FACTOR = 0.3;
   if (albumVideo) {
     albumVideo.addEventListener("loadedmetadata", () => {
-      // Unlock video for scrubbing on mobile by playing and then pausing it
+      // Unlock video for scrubbing on mobile by playing then pausing it
       albumVideo.play().then(() => {
         albumVideo.pause();
         albumVideo.currentTime = 0;
@@ -187,27 +172,32 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
   }
   updateAlbumVideo();
 
+  // Additional mobile unlock on touchend
+  window.addEventListener('touchend', () => {
+    if (albumVideo && albumVideo.paused) {
+      albumVideo.play().then(() => albumVideo.pause())
+        .catch(err => console.error("Touchend unlock error:", err));
+    }
+  });
+
   // ----------------------------------------------------------
   // Unified Wheel & Touch Event Handling
   // ----------------------------------------------------------
   let pendingDelta = 0;
   let scrollScheduled = false;
-
-  // Touch events for mobile
   let touchStartY = null;
   function onTouchStart(e) {
     touchStartY = e.touches[0].clientY;
   }
   function onTouchMove(e) {
     if (touchStartY === null) return;
-    let deltaY = touchStartY - e.touches[0].clientY;
+    const deltaY = touchStartY - e.touches[0].clientY;
     pendingDelta += deltaY;
     touchStartY = e.touches[0].clientY;
     if (!scrollScheduled) {
       scrollScheduled = true;
       requestAnimationFrame(processWheel);
     }
-    // Prevent default scrolling so the coding text remains fixed
     e.preventDefault();
   }
   function onTouchEnd(e) {
@@ -217,7 +207,6 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
   window.addEventListener('touchmove', onTouchMove, { passive: false });
   window.addEventListener('touchend', onTouchEnd, { passive: false });
 
-  // Wheel event for non-touch devices
   function onWheel(e) {
     if (isTransitioning) return;
     e.preventDefault();
@@ -235,11 +224,11 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
       pendingDelta = 0;
       return;
     }
-    let delta = Math.sign(pendingDelta) * Math.min(Math.abs(pendingDelta), threshold);
+    const delta = Math.sign(pendingDelta) * Math.min(Math.abs(pendingDelta), threshold);
     accumulatedDelta += delta;
     pendingDelta = 0;
 
-    // ----- Transition: Intro <-> Singles -----
+    // Transition: Intro <-> Singles
     if (currentSection === "intro") {
       const progress = Math.min(accumulatedDelta, threshold) / threshold;
       singlesSection.style.clipPath = `circle(${progress * finalRadiusPercent}% at center)`;
@@ -253,7 +242,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
         setTimeout(() => { isTransitioning = false; }, 600);
       }
     }
-    // ----- Transition: Singles <-> Videos -----
+    // Transition: Singles <-> Videos
     else if (currentSection === "singles") {
       if (accumulatedDelta >= threshold) {
         isTransitioning = true;
@@ -276,7 +265,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
         setTimeout(() => { isTransitioning = false; }, 600);
       }
     }
-    // ----- Transition: Videos <-> Album -----
+    // Transition: Videos <-> Album
     else if (currentSection === "videos") {
       if (accumulatedDelta > 0 && !lockAlbumTransition) {
         const progress = Math.min(accumulatedDelta, threshold) / threshold;
@@ -303,7 +292,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
         setTimeout(() => { isTransitioning = false; }, 600);
       }
     }
-    // ----- Album Section: Video Scrubbing & Fade Transitions -----
+    // Album Section: Video Scrubbing & Fade Transitions
     else if (currentSection === "album") {
       if (delta > 0) {
         targetAlbumProgress = Math.min(1, targetAlbumProgress + delta / SCROLL_THRESHOLD);
