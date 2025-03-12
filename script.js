@@ -1,6 +1,6 @@
 window.addEventListener("load", () => {
   // ----------------------------------------------------------
-  // Ticker Cloning Functions (unchanged)
+  // Ticker Cloning Functions
   // ----------------------------------------------------------
   function cloneTickerContent(containerSelector, contentSelector, multiplier) {
     const container = document.querySelector(containerSelector);
@@ -66,7 +66,7 @@ window.addEventListener("load", () => {
   window.addEventListener("resize", initTickers);
 
   // ----------------------------------------------------------
-  // Intro Section Effects & Transitions (unchanged)
+  // Intro Section Effects & Transitions
   // ----------------------------------------------------------
   function initIntroSection() {
     const codingContainer = document.querySelector('.coding-text');
@@ -105,8 +105,8 @@ MESSAGE_ID: 74B39A; RECIPIENT: COMMAND_CENTER_EAST; PRIORITY: HIGH;
 SUBJECT: OPERATIONAL_UPDATE; CONTENT: MISSION_OBJECTIVE_COMPLETE;
 CASUALTIES: ZERO; DAMAGE_ASSESSMENT: MINIMAL; RETURN_ETA: 17:00 HOURS;
 END_TRANSMISSION; REBOOT_SEQUENCE_INITIATED; SYSTEM_RESTORATION_COMPLETE;
-ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS`.trim();
-    const prefillCount = 7000;
+ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim();
+    const prefillCount = 2000;
     let visibleText = codingText.slice(-prefillCount);
     codingParagraph.textContent = visibleText;
     let index = 0;
@@ -146,7 +146,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS`.trim()
   initIntroSection();
 
   // ----------------------------------------------------------
-  // Section Transition & Album Video Scrubbing Setup (unchanged)
+  // Section Transition & Album Video Scrubbing Setup
   // ----------------------------------------------------------
   let currentSection = "intro";
   let accumulatedDelta = 0;
@@ -168,9 +168,14 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS`.trim()
   const SMOOTHING_FACTOR = 0.3;
   if (albumVideo) {
     albumVideo.addEventListener("loadedmetadata", () => {
-      albumVideo.pause();
-      albumVideo.currentTime = 0;
-      console.log("Album video loaded. Duration:", albumVideo.duration);
+      // Unlock video for scrubbing on mobile by playing and then pausing it
+      albumVideo.play().then(() => {
+        albumVideo.pause();
+        albumVideo.currentTime = 0;
+        console.log("Album video unlocked. Duration:", albumVideo.duration);
+      }).catch(err => {
+        console.error("Error unlocking video for scrubbing:", err);
+      });
     });
   }
   function updateAlbumVideo() {
@@ -188,7 +193,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS`.trim()
   let pendingDelta = 0;
   let scrollScheduled = false;
 
-  // For touch events on mobile
+  // Touch events for mobile
   let touchStartY = null;
   function onTouchStart(e) {
     touchStartY = e.touches[0].clientY;
@@ -202,7 +207,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS`.trim()
       scrollScheduled = true;
       requestAnimationFrame(processWheel);
     }
-    // Prevent default to stop native scrolling of the coding text
+    // Prevent default scrolling so the coding text remains fixed
     e.preventDefault();
   }
   function onTouchEnd(e) {
