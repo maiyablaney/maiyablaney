@@ -30,6 +30,9 @@ body {
   background: #171740;
   overflow: hidden;
   font-family: 'Digital-7 Mono', monospace;
+  touch-action: none;
+}
+
 }
 .overlay {
   position: fixed;
