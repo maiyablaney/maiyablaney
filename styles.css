@@ -33,7 +33,6 @@ body {
   touch-action: none;
 }
 
-}
 .overlay {
   position: fixed;
   width: 100vw;
