@@ -200,12 +200,21 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
   let pendingDelta = 0;
   let scrollScheduled = false;
   let touchStartY = null;
+
+  // Set a delta multiplier to boost the wheel delta on devices/browsers where the value is low
+  let deltaMultiplier = 1;
+  if (/android/i.test(navigator.userAgent)) {
+    deltaMultiplier = 2;
+  } else if (/chrome/i.test(navigator.userAgent) && window.innerWidth >= 600) {
+    deltaMultiplier = 2;
+  }
+
   function onTouchStart(e) {
     touchStartY = e.touches[0].clientY;
   }
   function onTouchMove(e) {
     if (touchStartY === null) return;
-    const deltaY = touchStartY - e.touches[0].clientY;
+    const deltaY = (touchStartY - e.touches[0].clientY) * deltaMultiplier;
     pendingDelta += deltaY;
     touchStartY = e.touches[0].clientY;
     if (!scrollScheduled) {
@@ -224,7 +233,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
   function onWheel(e) {
     if (isTransitioning) return;
     e.preventDefault();
-    pendingDelta += e.deltaY;
+    pendingDelta += e.deltaY * deltaMultiplier;
     if (!scrollScheduled) {
       scrollScheduled = true;
       requestAnimationFrame(processWheel);
