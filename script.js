@@ -163,7 +163,8 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
   const albumVideo = document.getElementById("album-video");
   let albumProgress = 0;
   let targetAlbumProgress = 0;
-  const SCROLL_THRESHOLD = 300;
+  // For album scrubbing, use a lower threshold on Android
+  const SCROLL_THRESHOLD = /android/i.test(navigator.userAgent) ? 150 : 300;
   const SMOOTHING_FACTOR = 0.3;
   if (albumVideo) {
     albumVideo.addEventListener("loadedmetadata", () => {
@@ -201,10 +202,10 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
   let scrollScheduled = false;
   let touchStartY = null;
 
-  // Set a delta multiplier to boost the wheel delta on devices/browsers where the value is low
+  // Increase multiplier for Android significantly; for others, use a smaller boost
   let deltaMultiplier = 1;
   if (/android/i.test(navigator.userAgent)) {
-    deltaMultiplier = 2;
+    deltaMultiplier = 4;  // increased multiplier for Android
   } else if (/chrome/i.test(navigator.userAgent) && window.innerWidth >= 600) {
     deltaMultiplier = 2;
   }
