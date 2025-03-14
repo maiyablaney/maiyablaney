@@ -163,12 +163,11 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
   const albumVideo = document.getElementById("album-video");
   let albumProgress = 0;
   let targetAlbumProgress = 0;
-  // For album scrubbing, use a lower threshold on Android
+  // For album scrubbing, reduce threshold on Android for finer control:
   const SCROLL_THRESHOLD = /android/i.test(navigator.userAgent) ? 150 : 300;
   const SMOOTHING_FACTOR = 0.3;
   if (albumVideo) {
     albumVideo.addEventListener("loadedmetadata", () => {
-      // Unlock video for scrubbing on mobile by playing then pausing it
       albumVideo.play().then(() => {
         albumVideo.pause();
         albumVideo.currentTime = 0;
@@ -187,7 +186,6 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
   }
   updateAlbumVideo();
 
-  // Additional mobile unlock on touchend
   window.addEventListener('touchend', () => {
     if (albumVideo && albumVideo.paused) {
       albumVideo.play().then(() => albumVideo.pause())
@@ -202,10 +200,10 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
   let scrollScheduled = false;
   let touchStartY = null;
 
-  // Increase multiplier for Android significantly; for others, use a smaller boost
+  // Use a larger multiplier on Android
   let deltaMultiplier = 1;
   if (/android/i.test(navigator.userAgent)) {
-    deltaMultiplier = 4;  // increased multiplier for Android
+    deltaMultiplier = 8;
   } else if (/chrome/i.test(navigator.userAgent) && window.innerWidth >= 600) {
     deltaMultiplier = 2;
   }
@@ -218,6 +216,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
     const deltaY = (touchStartY - e.touches[0].clientY) * deltaMultiplier;
     pendingDelta += deltaY;
     touchStartY = e.touches[0].clientY;
+    console.log("Touch delta:", deltaY, "Pending:", pendingDelta);
     if (!scrollScheduled) {
       scrollScheduled = true;
       requestAnimationFrame(processWheel);
@@ -234,7 +233,9 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
   function onWheel(e) {
     if (isTransitioning) return;
     e.preventDefault();
-    pendingDelta += e.deltaY * deltaMultiplier;
+    const deltaY = e.deltaY * deltaMultiplier;
+    pendingDelta += deltaY;
+    console.log("Wheel delta:", deltaY, "Pending:", pendingDelta);
     if (!scrollScheduled) {
       scrollScheduled = true;
       requestAnimationFrame(processWheel);
@@ -248,9 +249,12 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`.trim(
       pendingDelta = 0;
       return;
     }
+    // Debug log the accumulated delta before processing
+    console.log("Processing wheel. PendingDelta:", pendingDelta);
     const delta = Math.sign(pendingDelta) * Math.min(Math.abs(pendingDelta), threshold);
     accumulatedDelta += delta;
     pendingDelta = 0;
+    console.log("AccumulatedDelta:", accumulatedDelta);
 
     // Transition: Intro <-> Singles
     if (currentSection === "intro") {
