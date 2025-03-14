@@ -3,10 +3,7 @@
   font-family: 'Digital-7 Mono';
   src: url('assets/fonts/digital-7-mono.ttf') format('truetype');
 }
-@font-face {
-  font-family: 'Bodoni Italic';
-  src: url('assets/fonts/bodoni-72-book-italic.ttf') format('truetype');
-}
+
 @font-face {
   font-family: 'SFPixelateShaded';
   src: url('assets/fonts/sfpixelateshaded.ttf') format('truetype');
