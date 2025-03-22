@@ -133,13 +133,13 @@ body {
 
 @media (min-width: 600px) and (max-width: 1024px) {
   .main-text {
-    top: 50%;
+    top: 51.5%;
   }
 }
 
 @media (max-width: 599px) {
   .main-text {
-    font-size: 30pt;
+    font-size: 33pt;
   }
 }
 
@@ -187,7 +187,7 @@ body {
 
 @media (min-width: 1280px) and (max-width: 1280px) {
   .scroll-text {
-    top: 53%;
+    top: 54%;
   }
 }
 
@@ -199,7 +199,7 @@ body {
 
 @media (max-width: 599px) {
   .scroll-text {
-    font-size: 20pt;
+    font-size: 22pt;
     top: 51%;
     left: 52%;
   }
