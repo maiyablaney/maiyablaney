@@ -1,3 +1,4 @@
+
 /* Font Imports & Global Resets */
 @font-face {
   font-family: 'Digital-7 Mono';
@@ -133,13 +134,13 @@ body {
 
 @media (min-width: 600px) and (max-width: 1024px) {
   .main-text {
-    top: 51.5%;
+    top: 50%;
   }
 }
 
 @media (max-width: 599px) {
   .main-text {
-    font-size: 33pt;
+    font-size: 30pt;
   }
 }
 
@@ -187,7 +188,7 @@ body {
 
 @media (min-width: 1280px) and (max-width: 1280px) {
   .scroll-text {
-    top: 54%;
+    top: 57%;
   }
 }
 
@@ -199,8 +200,8 @@ body {
 
 @media (max-width: 599px) {
   .scroll-text {
-    font-size: 22pt;
-    top: 51%;
+    font-size: 20pt;
+    top: 55%;
     left: 52%;
   }
   .cursor {
@@ -324,7 +325,7 @@ body {
   }
 }
 
-/* Vertical Tickers */
+/* Updated Vertical Ticker (Listen) Styles */
 .vertical-ticker.listen {
   position: absolute;
   top: 0;
@@ -338,12 +339,29 @@ body {
   font-size: 50pt;
   line-height: 1;
   color: #FFF2D5;
-  animation: verticalTickerListen 20s linear infinite;
+  /* The content will be dynamically tall via JS cloning */
+  animation: scrollDown var(--ticker-duration, 10s) linear infinite;
 }
-@keyframes verticalTickerListen {
+
+/* Keyframes for downward scrolling (content moves from top to bottom) */
+@keyframes scrollDown {
   0% { transform: translateY(-50%); }
   100% { transform: translateY(0); }
 }
+
+/* Disable hover effect on tablets and phones */
+@media (max-width: 1024px) {
+  .vertical-ticker.listen:hover .ticker-link {
+    color: inherit;
+  }
+}
+
+/* Active state for mobile/tablet clicks */
+.ticker-link.active {
+  color: #b0160b !important;
+}
+
+
 .vertical-ticker.fumbled {
   position: absolute;
   top: 0;
