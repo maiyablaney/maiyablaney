@@ -133,13 +133,13 @@ body {
 
 @media (min-width: 600px) and (max-width: 1024px) {
   .main-text {
-    top: 46%;
+    top: 50%;
   }
 }
 
 @media (max-width: 599px) {
   .main-text {
-    font-size: 35pt;
+    font-size: 30pt;
   }
 }
 
@@ -199,8 +199,8 @@ body {
 
 @media (max-width: 599px) {
   .scroll-text {
-    font-size: 22pt;
-    top: 52%;
+    font-size: 20pt;
+    top: 55%;
     left: 52%;
   }
   .cursor {
