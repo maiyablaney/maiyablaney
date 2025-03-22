@@ -125,11 +125,14 @@
     window.addEventListener('resize', initVideosTicker);
     
     // ==================================================
-    // Ticker Cloning Functions (For non-listen tickers)
+    // Ticker Cloning Functions (For non-listen, non-fumbled, non-honey, non-recognize tickers)
     // ==================================================
     function cloneTickerContent(containerSelector, contentSelector, multiplier) {
-      // Skip cloning for the Listen ticker – it will be handled separately
-      if (containerSelector.indexOf('listen') !== -1) return;
+      // Skip cloning for Listen, Fumbled, Honey, and Recognize tickers – these will be handled separately
+      if (containerSelector.indexOf('listen') !== -1 ||
+          containerSelector.indexOf('fumbled') !== -1 ||
+          containerSelector.indexOf('honey') !== -1 ||
+          containerSelector.indexOf('recognize') !== -1) return;
       const container = document.querySelector(containerSelector);
       const content = document.querySelector(contentSelector);
       if (!container || !content) return;
@@ -172,9 +175,7 @@
     
     function initTickers() {
       setTimeout(() => {
-        // Only clone non-listen tickers (fumbled, honey, recognize)
-        cloneTickerContent('.vertical-ticker.fumbled', '.vertical-ticker-content.fumbled', 2);
-        cloneTickerContent('.vertical-ticker.honey', '.vertical-ticker-content.honey', 2);
+        // Only clone other vertical tickers (for example, the 'recognize' ticker is handled separately)
         cloneTickerContent('.vertical-ticker.recognize', '.vertical-ticker-content.recognize', 2);
         // Horizontal ticker cloning remains as before.
         cloneHorizontalTickerContent('.videos-ticker-wrapper', '.videos-ticker-content', 15);
@@ -188,30 +189,96 @@
     window.addEventListener("resize", initTickers);
     
     // ==================================================
-    // Listen Ticker Initialization
+    // Listen Ticker Initialization (Existing)
     // ==================================================
     function initListenTicker() {
       const container = document.querySelector('.vertical-ticker.listen');
       const content = container.querySelector('.vertical-ticker-content.listen');
-      // Use the initial markup (a single copy) as template.
       const templateHTML = `<p class="ticker-text">
           <a href="https://www.google.com" target="_blank" class="ticker-link">Listen</a>
         </p>`;
       content.innerHTML = templateHTML;
-      // Clone until content height is at least twice the container's height.
-      while(content.offsetHeight < container.offsetHeight * 2) {
+      while (content.offsetHeight < container.offsetHeight * 2) {
         content.innerHTML += templateHTML;
       }
-      // Calculate the scroll distance (we use half the total content height for a seamless loop)
       const scrollDistance = content.offsetHeight / 2;
-      const speed = 30; // pixels per second (adjust as needed)
+      const speed = 30; // pixels per second
       const duration = scrollDistance / speed;
-      // Set the CSS variable --ticker-duration on the content element.
       content.style.setProperty('--ticker-duration', duration + 's');
     }
     
     initListenTicker();
     window.addEventListener('resize', initListenTicker);
+    
+    // ==================================================
+    // Fumbled Ticker Initialization (Existing)
+    // ==================================================
+    function initFumbledTicker() {
+      const container = document.querySelector('.vertical-ticker.fumbled');
+      const content = container.querySelector('.vertical-ticker-content.fumbled');
+      const templateHTML = `<p class="ticker-text">
+          <a href="https://www.google.com" target="_blank" class="ticker-link">Fumbled</a>
+        </p>`;
+      content.innerHTML = templateHTML;
+      while (content.offsetHeight < container.offsetHeight * 2) {
+        content.innerHTML += templateHTML;
+      }
+      const scrollDistance = content.offsetHeight / 2;
+      const speed = 20; // pixels per second
+      const duration = scrollDistance / speed;
+      content.style.setProperty('--fumbled-duration', duration + 's');
+    }
+    
+    initFumbledTicker();
+    window.addEventListener('resize', initFumbledTicker);
+    
+    // ==================================================
+    // Honey Ticker Initialization (Existing)
+    // ==================================================
+    function initHoneyTicker() {
+      const container = document.querySelector('.vertical-ticker.honey');
+      const content = container.querySelector('.vertical-ticker-content.honey');
+      const templateHTML = `<p class="ticker-text">
+          <a href="https://www.google.com" target="_blank" class="ticker-link">Honey I</a>
+        </p>`;
+      content.innerHTML = templateHTML;
+      while (content.offsetHeight < container.offsetHeight * 2) {
+        content.innerHTML += templateHTML;
+      }
+      const scrollDistance = content.offsetHeight / 2;
+      const speed = 25; // pixels per second
+      const duration = scrollDistance / speed;
+      content.style.setProperty('--honey-duration', duration + 's');
+    }
+    
+    initHoneyTicker();
+    window.addEventListener('resize', initHoneyTicker);
+    
+    // ==================================================
+    // Recognize Ticker Initialization (New)
+    // ==================================================
+    function initRecognizeTicker() {
+      const container = document.querySelector('.vertical-ticker.recognize');
+      const content = container.querySelector('.vertical-ticker-content.recognize');
+      // Use a single copy as the template.
+      const templateHTML = `<p class="ticker-text">
+          <a href="https://www.google.com" target="_blank" class="ticker-link">Recognize Me</a>
+        </p>`;
+      content.innerHTML = templateHTML;
+      // Dynamically clone until content height is at least twice the container's height.
+      while (content.offsetHeight < container.offsetHeight * 2) {
+        content.innerHTML += templateHTML;
+      }
+      // Calculate the scroll distance (half the total content height for a seamless loop)
+      const scrollDistance = content.offsetHeight / 2;
+      // Choose a speed for the Recognize ticker; here we use 20 pixels per second.
+      const speed = 20;
+      const duration = scrollDistance / speed;
+      content.style.setProperty('--recognize-duration', duration + 's');
+    }
+    
+    initRecognizeTicker();
+    window.addEventListener('resize', initRecognizeTicker);
     
     // ==================================================
     // Intro Section Effects (Leave unchanged)
@@ -238,7 +305,7 @@ MESSAGE_ID: 74B39A; RECIPIENT: COMMAND_CENTER_EAST; PRIORITY: HIGH;
 SUBJECT: OPERATIONAL_UPDATE; CONTENT: MISSION_OBJECTIVE_COMPLETE;
 CASUALTIES: ZERO; DAMAGE_ASSESSMENT: MINIMAL; RETURN_ETA: 17:00 HOURS;
 END_TRANSMISSION; REBOOT_SEQUENCE_INITIATED; SYSTEM_RESTORATION_COMPLETE;
-ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS; INIT_SEQUENCE_START; PROTOCOL_OVERRIDE_ACTIVE; QUERY_ADDRESS: NODE_ALPHA_7;
+ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;INIT_SEQUENCE_START; PROTOCOL_OVERRIDE_ACTIVE; QUERY_ADDRESS: NODE_ALPHA_7;
 SYSTEM_DIAGNOSTIC_RUN; CORE_TEMP: 47.3C; VENTILATION_STATUS: OPTIMAL;
 ATMOSPHERIC_PRESSURE: 1013.25hPa; OXYGEN_LEVEL: 20.9%; VISUAL_FEED: ENGAGED;
 AUDIO_FEED: MUTED; TACTILE_FEED: OFFLINE; NETWORK_CONNECTIVITY: ESTABLISHED;
@@ -373,7 +440,6 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
       } else if (currentSection === "singles") {
         if (accumulatedDelta >= threshold) {
           isTransitioning = true;
-          // Transition from Singles -> Videos using fade (via active class)
           videosSection.classList.add("active");
           currentSection = "videos";
           accumulatedDelta = 0;
@@ -385,7 +451,6 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
           }, 600);
         } else if (accumulatedDelta <= -threshold) {
           isTransitioning = true;
-          // Reverse from Singles -> Intro
           singlesSection.style.clipPath = `circle(0% at center)`;
           introSection.classList.remove("dismiss");
           currentSection = "intro";
@@ -394,7 +459,6 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
           setTimeout(() => { isTransitioning = false; }, 600);
         }
       } else if (currentSection === "videos") {
-        // ----- Transition: Videos -> Album (Forward) -----
         if (accumulatedDelta >= threshold && !lockAlbumTransition) {
           isTransitioning = true;
           videosSection.style.transition = "transform 0.5s ease-out";
@@ -411,29 +475,23 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
             albumSection.style.transition = "";
           }, 600);
         } else if (accumulatedDelta <= -threshold) {
-          // ----- Reverse Transition: Videos -> Singles using fade -----
           isTransitioning = true;
           videosSection.classList.remove("active");
-          // Ensure album section is off-screen
           albumSection.style.transform = "translateY(100%)";
           currentSection = "singles";
           accumulatedDelta = 0;
           console.log("Returned to singles from videos");
-          setTimeout(() => {
-            isTransitioning = false;
-          }, 600);
+          setTimeout(() => { isTransitioning = false; }, 600);
         }
       }
       
-      // ----- Album Section: Scroll-triggered Scrubbing of PNG Sequence & Reverse Transition -----
       if (currentSection === "album") {
-        const albumScrubMultiplier = 0.6; // for smoother scrubbing
+        const albumScrubMultiplier = 0.6;
         if (accumulatedDelta !== 0) {
           targetAlbumProgress += (accumulatedDelta / threshold) * albumScrubMultiplier;
           targetAlbumProgress = Math.max(0, Math.min(1, targetAlbumProgress));
           console.log("Album target progress:", targetAlbumProgress.toFixed(2));
         }
-        // Reverse trigger: if minimal progress and a slight upward scroll
         if (targetAlbumProgress <= 0.01 && accumulatedDelta <= -threshold * 0.1) {
           isTransitioning = true;
           currentSection = "videos";
@@ -456,9 +514,6 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
       }
     }
     
-    // ==================================================
-    // Vertical Ticker Click for Mobile/Tablet (Listen Ticker)
-    // ==================================================
     if (window.innerWidth < 1025) {
       const listenLink = document.querySelector('.vertical-ticker.listen .ticker-link');
       if (listenLink) {
@@ -468,5 +523,6 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
         });
       }
     }
+    
   });
 })();
