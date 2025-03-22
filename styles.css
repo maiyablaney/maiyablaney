@@ -200,7 +200,7 @@ body {
 @media (max-width: 599px) {
   .scroll-text {
     font-size: 20pt;
-    top: 55%;
+    top: 51%;
     left: 52%;
   }
   .cursor {
