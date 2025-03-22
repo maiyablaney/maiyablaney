@@ -125,9 +125,11 @@
     window.addEventListener('resize', initVideosTicker);
     
     // ==================================================
-    // Ticker Cloning Functions
+    // Ticker Cloning Functions (For non-listen tickers)
     // ==================================================
     function cloneTickerContent(containerSelector, contentSelector, multiplier) {
+      // Skip cloning for the Listen ticker – it will be handled separately
+      if (containerSelector.indexOf('listen') !== -1) return;
       const container = document.querySelector(containerSelector);
       const content = document.querySelector(contentSelector);
       if (!container || !content) return;
@@ -170,11 +172,11 @@
     
     function initTickers() {
       setTimeout(() => {
-        cloneTickerContent('.vertical-ticker.listen', '.vertical-ticker-content.listen', 2);
+        // Only clone non-listen tickers (fumbled, honey, recognize)
         cloneTickerContent('.vertical-ticker.fumbled', '.vertical-ticker-content.fumbled', 2);
         cloneTickerContent('.vertical-ticker.honey', '.vertical-ticker-content.honey', 2);
         cloneTickerContent('.vertical-ticker.recognize', '.vertical-ticker-content.recognize', 2);
-        // Increase the multiplier to 15 for a longer ticker loop.
+        // Horizontal ticker cloning remains as before.
         cloneHorizontalTickerContent('.videos-ticker-wrapper', '.videos-ticker-content', 15);
         setTimeout(() => {
           const singles = document.querySelector('.singles-section');
@@ -184,6 +186,32 @@
     }
     initTickers();
     window.addEventListener("resize", initTickers);
+    
+    // ==================================================
+    // Listen Ticker Initialization
+    // ==================================================
+    function initListenTicker() {
+      const container = document.querySelector('.vertical-ticker.listen');
+      const content = container.querySelector('.vertical-ticker-content.listen');
+      // Use the initial markup (a single copy) as template.
+      const templateHTML = `<p class="ticker-text">
+          <a href="https://www.google.com" target="_blank" class="ticker-link">Listen</a>
+        </p>`;
+      content.innerHTML = templateHTML;
+      // Clone until content height is at least twice the container's height.
+      while(content.offsetHeight < container.offsetHeight * 2) {
+        content.innerHTML += templateHTML;
+      }
+      // Calculate the scroll distance (we use half the total content height for a seamless loop)
+      const scrollDistance = content.offsetHeight / 2;
+      const speed = 30; // pixels per second (adjust as needed)
+      const duration = scrollDistance / speed;
+      // Set the CSS variable --ticker-duration on the content element.
+      content.style.setProperty('--ticker-duration', duration + 's');
+    }
+    
+    initListenTicker();
+    window.addEventListener('resize', initListenTicker);
     
     // ==================================================
     // Intro Section Effects (Leave unchanged)
@@ -210,8 +238,7 @@ MESSAGE_ID: 74B39A; RECIPIENT: COMMAND_CENTER_EAST; PRIORITY: HIGH;
 SUBJECT: OPERATIONAL_UPDATE; CONTENT: MISSION_OBJECTIVE_COMPLETE;
 CASUALTIES: ZERO; DAMAGE_ASSESSMENT: MINIMAL; RETURN_ETA: 17:00 HOURS;
 END_TRANSMISSION; REBOOT_SEQUENCE_INITIATED; SYSTEM_RESTORATION_COMPLETE;
-ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;
-INIT_SEQUENCE_START; PROTOCOL_OVERRIDE_ACTIVE; QUERY_ADDRESS: NODE_ALPHA_7;
+ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS; INIT_SEQUENCE_START; PROTOCOL_OVERRIDE_ACTIVE; QUERY_ADDRESS: NODE_ALPHA_7;
 SYSTEM_DIAGNOSTIC_RUN; CORE_TEMP: 47.3C; VENTILATION_STATUS: OPTIMAL;
 ATMOSPHERIC_PRESSURE: 1013.25hPa; OXYGEN_LEVEL: 20.9%; VISUAL_FEED: ENGAGED;
 AUDIO_FEED: MUTED; TACTILE_FEED: OFFLINE; NETWORK_CONNECTIVITY: ESTABLISHED;
@@ -426,6 +453,19 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
           targetAlbumProgress = 0;
         }
         accumulatedDelta = 0;
+      }
+    }
+    
+    // ==================================================
+    // Vertical Ticker Click for Mobile/Tablet (Listen Ticker)
+    // ==================================================
+    if (window.innerWidth < 1025) {
+      const listenLink = document.querySelector('.vertical-ticker.listen .ticker-link');
+      if (listenLink) {
+        listenLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          listenLink.classList.toggle('active');
+        });
       }
     }
   });
