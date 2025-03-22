@@ -401,15 +401,14 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
       
       // ----- Album Section: Scroll-triggered Scrubbing of PNG Sequence & Reverse Transition -----
       if (currentSection === "album") {
-        // Increased multiplier for a smoother album frame scrub (from 0.3 to 0.6)
-        const albumScrubMultiplier = 0.6;
+        const albumScrubMultiplier = 0.6; // increased for smoother scrubbing
         if (accumulatedDelta !== 0) {
           targetAlbumProgress += (accumulatedDelta / threshold) * albumScrubMultiplier;
           targetAlbumProgress = Math.max(0, Math.min(1, targetAlbumProgress));
           console.log("Album target progress:", targetAlbumProgress.toFixed(2));
         }
-        // Lowered reverse trigger threshold (from -threshold * 0.5 to -threshold * 0.3)
-        if (targetAlbumProgress <= 0.01 && accumulatedDelta <= -threshold * 0.3) {
+        // Lower reverse trigger threshold further: from -threshold * 0.3 to -threshold * 0.1
+        if (targetAlbumProgress <= 0.01 && accumulatedDelta <= -threshold * 0.1) {
           isTransitioning = true;
           currentSection = "videos";
           accumulatedDelta = 0;
