@@ -130,14 +130,16 @@ body {
 .main-text .lastname {
   display: inline;
 }
-@media (max-width: 599px) {
-  .main-text {
-    font-size: 35pt;
-  }
-}
+
 @media (min-width: 600px) and (max-width: 1024px) {
   .main-text {
     top: 46%;
+  }
+}
+
+@media (max-width: 599px) {
+  .main-text {
+    font-size: 35pt;
   }
 }
 
@@ -182,6 +184,19 @@ body {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
+
+@media (min-width: 1280px) and (max-width: 1280px) {
+  .scroll-text {
+    top: 57%;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1024px) {
+  .scroll-text {
+    left: 52%;
+  }
+}
+
 @media (max-width: 599px) {
   .scroll-text {
     font-size: 22pt;
@@ -190,16 +205,6 @@ body {
   }
   .cursor {
     font-size: 22pt;
-  }
-}
-@media (min-width: 600px) and (max-width: 1024px) {
-  .scroll-text {
-    left: 52%;
-  }
-}
-@media (min-width: 1280px) and (max-width: 1280px) {
-  .scroll-text {
-    top: 57%;
   }
 }
 
