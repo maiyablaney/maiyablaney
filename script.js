@@ -365,34 +365,41 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
           setTimeout(() => { isTransitioning = false; }, 600);
         }
       } else if (currentSection === "videos") {
-        if (accumulatedDelta > 0 && !lockAlbumTransition) {
-          let progress = accumulatedDelta / threshold;
-          if (progress > 1) progress = 1;
-          albumSection.style.transform = `translateY(${(1 - progress) * 100}%)`;
-          videosSection.style.transform = `translateY(${-progress * 100}%)`;
-          if (accumulatedDelta >= threshold) {
-            isTransitioning = true;
-            currentSection = "album";
-            accumulatedDelta = 0;
-            albumSection.style.transform = `translateY(0%)`;
-            videosSection.style.transform = `translateY(-100%)`;
-            console.log("Transitioned to album");
-            targetAlbumProgress = 0;
-            setTimeout(() => { isTransitioning = false; }, 600);
-          }
+        // ----- Modified Transition: Videos -> Album (Snap Transition) -----
+        if (accumulatedDelta >= threshold && !lockAlbumTransition) {
+          isTransitioning = true;
+          videosSection.style.transition = "transform 0.5s ease-out";
+          albumSection.style.transition = "transform 0.5s ease-out";
+          videosSection.style.transform = "translateY(-100%)";
+          albumSection.style.transform = "translateY(0%)";
+          currentSection = "album";
+          accumulatedDelta = 0;
+          targetAlbumProgress = 0;
+          console.log("Transitioned to album (snap)");
+          setTimeout(() => {
+            isTransitioning = false;
+            videosSection.style.transition = "";
+            albumSection.style.transition = "";
+          }, 600);
         } else if (accumulatedDelta <= -threshold) {
           isTransitioning = true;
           videosSection.classList.remove("active");
           currentSection = "singles";
           accumulatedDelta = 0;
-          videosSection.style.transform = `translateY(0%)`;
-          albumSection.style.transform = `translateY(100%)`;
+          videosSection.style.transition = "transform 0.5s ease-out";
+          albumSection.style.transition = "transform 0.5s ease-out";
+          videosSection.style.transform = "translateY(0%)";
+          albumSection.style.transform = "translateY(100%)";
           console.log("Returned to singles from videos");
-          setTimeout(() => { isTransitioning = false; }, 600);
+          setTimeout(() => {
+            isTransitioning = false;
+            videosSection.style.transition = "";
+            albumSection.style.transition = "";
+          }, 600);
         }
       }
       
-      // ----- Album Section: Scroll-triggered Scrubbing of PNG Sequence -----
+      // ----- Album Section: Scroll-triggered Scrubbing of PNG Sequence & Reverse Transition -----
       if (currentSection === "album") {
         const albumScrubMultiplier = 0.3;
         if (accumulatedDelta !== 0) {
@@ -400,6 +407,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
           targetAlbumProgress = Math.max(0, Math.min(1, targetAlbumProgress));
           console.log("Album target progress:", targetAlbumProgress.toFixed(2));
         }
+        // If user scrolls up (reverse) sufficiently, trigger a snap transition back to videos.
         if (targetAlbumProgress <= 0.01 && accumulatedDelta <= -threshold * 0.5) {
           isTransitioning = true;
           currentSection = "videos";
@@ -408,9 +416,9 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
           videosSection.style.transition = "transform 0.5s ease-out";
           albumSection.style.transform = "translateY(100%)";
           videosSection.style.transform = "translateY(0%)";
+          console.log("Exiting album to videos");
           document.querySelectorAll('.pop-image, .pop-button').forEach(el => el.style.opacity = 0);
           document.querySelectorAll('.album-header, .album-outnow, .album-by, .album-icons').forEach(el => el.style.opacity = 1);
-          console.log("Exiting album to videos");
           setTimeout(() => { 
             isTransitioning = false; 
             albumSection.style.transition = "";
