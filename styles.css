@@ -140,7 +140,7 @@ body {
 
 @media (max-width: 599px) {
   .main-text {
-    font-size: 30pt;
+    font-size: 32pt;
   }
 }
 
@@ -188,20 +188,21 @@ body {
 
 @media (min-width: 1280px) and (max-width: 1280px) {
   .scroll-text {
-    top: 57%;
+    top: 55%;
   }
 }
 
 @media (min-width: 600px) and (max-width: 1024px) {
   .scroll-text {
-    left: 52%;
+    top: 56%;
+    left: 50%;
   }
 }
 
 @media (max-width: 599px) {
   .scroll-text {
-    font-size: 20pt;
-    top: 55%;
+    font-size: 22pt;
+    top: 51.5%;
     left: 52%;
   }
   .cursor {
@@ -361,7 +362,7 @@ body {
   color: #b0160b !important;
 }
 
-
+/* Updated Fumbled Ticker Styles */
 .vertical-ticker.fumbled {
   position: absolute;
   top: 0;
@@ -375,12 +376,33 @@ body {
   font-size: 27pt;
   line-height: 1;
   color: #FFF2D5;
-  animation: verticalTickerFumbled 15s linear infinite;
+  /* Use the dynamically set duration via CSS variable --fumbled-duration */
+  animation: scrollDownFumbled var(--fumbled-duration, 15s) linear infinite;
 }
-@keyframes verticalTickerFumbled {
-  0% { transform: translateY(-50%); }
-  100% { transform: translateY(0); }
+
+/* Keyframes for downward scrolling for Fumbled ticker */
+@keyframes scrollDownFumbled {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
+
+/* Disable hover effect on tablets and phones for Fumbled ticker if needed */
+@media (max-width: 1024px) {
+  .vertical-ticker.fumbled:hover .ticker-link {
+    color: inherit;
+  }
+}
+
+/* Active state for mobile/tablet clicks */
+.ticker-link.active {
+  color: #b0160b !important;
+}
+
+/* Updated Honey Ticker Styles */
 .vertical-ticker.honey {
   position: absolute;
   top: 27%;
@@ -394,12 +416,33 @@ body {
   font-size: 32pt;
   line-height: 1;
   color: #FFF2D5;
-  animation: verticalTickerHoney 17s linear infinite;
+  /* Use the dynamically set duration via CSS variable --honey-duration */
+  animation: scrollDownHoney var(--honey-duration, 17s) linear infinite;
 }
-@keyframes verticalTickerHoney {
-  0% { transform: translateY(-50%); }
-  100% { transform: translateY(0); }
+
+@keyframes scrollDownHoney {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
+
+/* Disable hover effect on tablets and phones */
+@media (max-width: 1024px) {
+  .vertical-ticker.honey:hover .ticker-link {
+    color: inherit;
+  }
+}
+
+/* Active state for mobile/tablet clicks */
+.ticker-link.active {
+  color: #b0160b !important;
+}
+
+
+/* Updated Recognize Ticker Styles */
 .vertical-ticker.recognize {
   position: absolute;
   top: 75%;
@@ -413,12 +456,31 @@ body {
   font-size: 27pt;
   line-height: 1;
   color: #FFF2D5;
-  animation: verticalTickerRecognize 19s linear infinite;
+  /* Use the dynamically set duration via CSS variable --recognize-duration */
+  animation: scrollDownRecognize var(--recognize-duration, 19s) linear infinite;
 }
-@keyframes verticalTickerRecognize {
-  0% { transform: translateY(-50%); }
-  100% { transform: translateY(0); }
+
+@keyframes scrollDownRecognize {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
+
+/* Disable hover effect on tablets and phones for Recognize ticker */
+@media (max-width: 1024px) {
+  .vertical-ticker.recognize:hover .ticker-link {
+    color: inherit;
+  }
+}
+
+/* Active state for mobile/tablet clicks */
+.ticker-link.active {
+  color: #b0160b !important;
+}
+
 
 /* Vertical Ticker Link Styling */
 .ticker-text a {
