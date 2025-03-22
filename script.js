@@ -346,6 +346,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
       } else if (currentSection === "singles") {
         if (accumulatedDelta >= threshold) {
           isTransitioning = true;
+          // Transition from Singles -> Videos using fade (via active class)
           videosSection.classList.add("active");
           currentSection = "videos";
           accumulatedDelta = 0;
@@ -357,6 +358,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
           }, 600);
         } else if (accumulatedDelta <= -threshold) {
           isTransitioning = true;
+          // Reverse from Singles -> Intro
           singlesSection.style.clipPath = `circle(0% at center)`;
           introSection.classList.remove("dismiss");
           currentSection = "intro";
@@ -365,7 +367,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
           setTimeout(() => { isTransitioning = false; }, 600);
         }
       } else if (currentSection === "videos") {
-        // ----- Modified Transition: Videos -> Album (Snap Transition) -----
+        // ----- Transition: Videos -> Album (Forward) -----
         if (accumulatedDelta >= threshold && !lockAlbumTransition) {
           isTransitioning = true;
           videosSection.style.transition = "transform 0.5s ease-out";
@@ -382,32 +384,29 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
             albumSection.style.transition = "";
           }, 600);
         } else if (accumulatedDelta <= -threshold) {
+          // ----- Reverse Transition: Videos -> Singles using fade -----
           isTransitioning = true;
           videosSection.classList.remove("active");
+          // Ensure album section is off-screen
+          albumSection.style.transform = "translateY(100%)";
           currentSection = "singles";
           accumulatedDelta = 0;
-          videosSection.style.transition = "transform 0.5s ease-out";
-          albumSection.style.transition = "transform 0.5s ease-out";
-          videosSection.style.transform = "translateY(0%)";
-          albumSection.style.transform = "translateY(100%)";
           console.log("Returned to singles from videos");
           setTimeout(() => {
             isTransitioning = false;
-            videosSection.style.transition = "";
-            albumSection.style.transition = "";
           }, 600);
         }
       }
       
       // ----- Album Section: Scroll-triggered Scrubbing of PNG Sequence & Reverse Transition -----
       if (currentSection === "album") {
-        const albumScrubMultiplier = 0.6; // increased for smoother scrubbing
+        const albumScrubMultiplier = 0.6; // for smoother scrubbing
         if (accumulatedDelta !== 0) {
           targetAlbumProgress += (accumulatedDelta / threshold) * albumScrubMultiplier;
           targetAlbumProgress = Math.max(0, Math.min(1, targetAlbumProgress));
           console.log("Album target progress:", targetAlbumProgress.toFixed(2));
         }
-        // Lower reverse trigger threshold further: from -threshold * 0.3 to -threshold * 0.1
+        // Reverse trigger: if minimal progress and a slight upward scroll
         if (targetAlbumProgress <= 0.01 && accumulatedDelta <= -threshold * 0.1) {
           isTransitioning = true;
           currentSection = "videos";
