@@ -1,4 +1,5 @@
 
+
 /* Font Imports & Global Resets */
 @font-face {
   font-family: 'Digital-7 Mono';
@@ -965,4 +966,36 @@ body {
   .pop-image.merchpop {
     max-width: 70vw;
   }
+}
+
+/* --- Basic Loading Screen Styles with Iris Shot Transition --- */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000; /* Black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* On top of all content */
+  /* Start fully covering the screen with a large circle */
+  clip-path: circle(150% at 50% 50%);
+  transition: clip-path 0.5s ease-in-out;
+}
+
+.loading-screen.hide {
+  /* Animate clip-path to a tiny circle at the centre so it disappears */
+  clip-path: circle(0% at 50% 50%);
+}
+
+
+/* The loading count is styled in white using your Digital-7 Mono font */
+.loading-count {
+  position: relative; /* make sure it sits above the ::before */
+  font-family: 'Digital-7 Mono', monospace;
+  font-size: 40pt;
+  color: #FFF2D5;
+  z-index: 2;
 }
