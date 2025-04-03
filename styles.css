@@ -116,7 +116,7 @@ body {
   }
 }
 
-@media (max-width: 390px) {
+@media (max-width: 375px) {
   .coding-text {
     font-size: 18pt;
   }
@@ -151,7 +151,7 @@ body {
   }
 }
 
-@media (max-width: 390px) {
+@media (max-width: 375px) {
   .main-text {
     font-size: 25pt;
   }
@@ -223,7 +223,7 @@ body {
   }
 }
 
-@media (max-width: 390px) {
+@media (max-width: 375px) {
   .scroll-text {
     font-size: 19pt;
     top: 50.5%;
@@ -542,9 +542,9 @@ body {
   }
 }
 
-@media (max-width: 390px) {
+@media (max-width: 375px) {
   .vertical-ticker-content.fumbled {
-    left: 20%;
+    left: 18%;
 }
 
 /* Videos Section */
