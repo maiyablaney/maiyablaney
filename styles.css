@@ -116,6 +116,12 @@ body {
   }
 }
 
+@media (max-width: 390px) {
+  .coding-text {
+    font-size: 18pt;
+  }
+}
+
 /* Main Text */
 .main-text {
   position: fixed;
@@ -142,6 +148,12 @@ body {
 @media (max-width: 599px) {
   .main-text {
     font-size: 32pt;
+  }
+}
+
+@media (max-width: 390px) {
+  .main-text {
+    font-size: 25pt;
   }
 }
 
@@ -208,6 +220,17 @@ body {
   }
   .cursor {
     font-size: 22pt;
+  }
+}
+
+@media (max-width: 390px) {
+  .scroll-text {
+    font-size: 19pt;
+    top: 50.5%;
+    left: 52%;
+  }
+  .cursor {
+    font-size: 19pt;
   }
 }
 
@@ -517,6 +540,11 @@ body {
   .vertical-ticker-content.recognize {
     font-size: 17pt;
   }
+}
+
+@media (max-width: 390px) {
+  .vertical-ticker-content.fumbled {
+    left: 20%;
 }
 
 /* Videos Section */
