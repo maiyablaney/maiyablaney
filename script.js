@@ -236,7 +236,7 @@
       const container = document.querySelector('.vertical-ticker.fumbled');
       const content = container.querySelector('.vertical-ticker-content.fumbled');
       const templateHTML = `<p class="ticker-text">
-          <a href="https://www.google.com" target="_blank" class="ticker-link">Fumbled</a>
+          <a href="https://maiyablaney.lnk.to/Fumbled" target="_blank" class="ticker-link">Fumbled</a>
         </p>`;
       content.innerHTML = templateHTML;
       while (content.offsetHeight < container.offsetHeight * 2) {
