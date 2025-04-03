@@ -966,6 +966,12 @@ body {
   .pop-image.merchpop {
     max-width: 70vw;
   }
+  .pop-button.tixbut {
+  width:  90px;
+  }
+.pop-button.merchbut {
+   width:  100px;
+  }
 }
 
 .loading-screen {
