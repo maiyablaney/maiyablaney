@@ -997,14 +997,14 @@ body {
   }
 }
 
-@media (max-width: 385px)
+@media (max-width: 380px) {
   .pop-button.tixbut {
-  width:  90px;
+    width:  90px;
+    }
+  .pop-button.merchbut {
+     width:  100px;
+    }
   }
-.pop-button.merchbut {
-   width:  100px;
-  }
-}
 
 .loading-screen {
   position: fixed;
