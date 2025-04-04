@@ -995,6 +995,9 @@ body {
   .pop-image.merchpop {
     max-width: 70vw;
   }
+}
+
+@media (max-width: 385px)
   .pop-button.tixbut {
   width:  90px;
   }
