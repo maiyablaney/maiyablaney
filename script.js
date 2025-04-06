@@ -1,48 +1,41 @@
-(function() {
-  window.addEventListener("load", () => {
-    // ===========================
-    // LOADING SCREEN CODE WITH IRIS SHOT TRANSITION
-    // ===========================
+(() => {
+  // Wait for the full window load
+  const onLoad = () => {
+    // ---------------------------
+    // Loading Screen with Iris Transition
+    // ---------------------------
     const loadingScreen = document.querySelector('.loading-screen');
     const loadingCount = document.querySelector('.loading-count');
     let progress = 0;
-    const progressInterval = setInterval(() => {
+    const updateLoadingScreen = () => {
       progress++;
-      if (loadingCount) loadingCount.textContent = progress + '%';
+      if (loadingCount) loadingCount.textContent = `${progress}%`;
       if (progress >= 100) {
-        clearInterval(progressInterval);
-        // Add the "hide" class to trigger the iris shot transition (clip-path animation)
+        clearInterval(loadingInterval);
         loadingScreen.classList.add('hide');
-        // Once the transition ends, remove the loading screen and start intro effects
         loadingScreen.addEventListener('transitionend', () => {
-          if (loadingScreen.parentNode) {
-            loadingScreen.parentNode.removeChild(loadingScreen);
-          }
+          loadingScreen.remove();
           initIntroSection();
         }, { once: true });
       }
-    }, 20); // Adjust timing as needed
-    
-    // ===========================
+    };
+    const loadingInterval = setInterval(updateLoadingScreen, 20);
+
+    // ---------------------------
     // PNG Sequence Preloading & Canvas Setup for Album Animation
-    // ===========================
-    const totalFrames = 40; // Frames: 0001.png to 0040.png
-    const frames = [];
-    for (let i = 1; i <= totalFrames; i++) {
+    // ---------------------------
+    const totalFrames = 40;
+    const frames = Array.from({ length: totalFrames }, (_, i) => {
       const img = new Image();
-      const frameNumber = String(i).padStart(4, '0');
+      const frameNumber = String(i + 1).padStart(4, '0');
       img.src = `assets/animation/${frameNumber}.png`;
-      frames.push(img);
-    }
-    
+      return img;
+    });
     const albumCanvas = document.getElementById("album-canvas");
-    if (!albumCanvas) {
-      console.error("album-canvas element not found");
-      return;
-    }
+    if (!albumCanvas) return console.error("album-canvas element not found");
     const ctx = albumCanvas.getContext("2d");
-    
-    function resizeCanvas() {
+
+    const resizeCanvas = () => {
       if (window.innerWidth < 1025) {
         albumCanvas.width = window.innerHeight;
         albumCanvas.height = window.innerWidth;
@@ -50,12 +43,12 @@
         albumCanvas.width = window.innerWidth;
         albumCanvas.height = window.innerHeight;
       }
-    }
+    };
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
-    
-    function drawCoverImage(img, ctx, cw, ch) {
-      const iw = img.width, ih = img.height;
+
+    const drawCoverImage = (img, context, cw, ch) => {
+      const { width: iw, height: ih } = img;
       const imgAspect = iw / ih;
       const canvasAspect = cw / ch;
       let sx, sy, sw, sh;
@@ -70,11 +63,11 @@
         sx = 0;
         sy = (ih - sh) / 2;
       }
-      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
-    }
-    
-    function drawAlbumFrame(progress) {
-      const frameIndex = Math.min(totalFrames - 1, Math.floor(progress * totalFrames));
+      context.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
+    };
+
+    const drawAlbumFrame = progressValue => {
+      const frameIndex = Math.min(totalFrames - 1, Math.floor(progressValue * totalFrames));
       const img = frames[frameIndex];
       if (img && img.complete) {
         ctx.clearRect(0, 0, albumCanvas.width, albumCanvas.height);
@@ -84,76 +77,62 @@
           ctx.drawImage(img, 0, 0, albumCanvas.width, albumCanvas.height);
         }
       }
-    }
-    
-    // ===========================
-    // Smooth Scrubbing & Delayed Opacity Mapping for PNG Sequence
-    // ===========================
-    let albumProgress = 0;
-    let targetAlbumProgress = 0;
+    };
+
+    // Smooth scrubbing & delayed opacity mapping for PNG sequence
+    let albumProgress = 0, targetAlbumProgress = 0;
     const SMOOTHING_FACTOR = 0.4;
-    
-    function mapProgress(p) {
+    const mapProgress = p => {
       const startDelay = 6 / totalFrames;
       const endDelay = (totalFrames - 6) / totalFrames;
       if (p < startDelay) return 0;
       if (p > endDelay) return 1;
       return (p - startDelay) / (endDelay - startDelay);
-    }
-    
-    function updateAlbumCanvas() {
+    };
+
+    const updateAlbumCanvas = () => {
       albumProgress += (targetAlbumProgress - albumProgress) * SMOOTHING_FACTOR;
       drawAlbumFrame(albumProgress);
       if (currentSection === "album") {
         const mapped = mapProgress(albumProgress);
         document.querySelectorAll('.album-header, .album-outnow, .album-by, .album-icons')
-          .forEach(el => { el.style.opacity = 1 - mapped; });
+          .forEach(el => el.style.opacity = 1 - mapped);
         document.querySelectorAll('.pop-image, .pop-button')
-          .forEach(el => { el.style.opacity = mapped; });
+          .forEach(el => el.style.opacity = mapped);
       }
       requestAnimationFrame(updateAlbumCanvas);
-    }
-    
+    };
+
     Promise.all(frames.map(img => new Promise(resolve => {
       if (img.complete) resolve();
       else { img.onload = resolve; img.onerror = resolve; }
-    }))).then(() => {
-      updateAlbumCanvas();
-    });
-    
-    // ===========================
-    // JS-Driven Videos Ticker Animation Using setInterval
-    // ===========================
-    let tickerLoopDistance = 0;
-    let tickerSpeed = 30;
+    }))).then(updateAlbumCanvas);
+
+    // ---------------------------
+    // JS-Driven Videos Ticker Animation
+    // ---------------------------
+    let tickerLoopDistance = 0, currentTickerOffset = 0, tickerSpeed = 30, tickerInterval = null;
     const tickerContent = document.querySelector('.videos-ticker-content');
-    let currentTickerOffset = 0;
-    let tickerInterval = null;
-    
-    function initVideosTicker() {
+
+    const initVideosTicker = () => {
       if (!tickerContent) return;
       tickerContent.style.animation = 'none';
       tickerLoopDistance = tickerContent.scrollWidth / 2;
       currentTickerOffset = 0;
       if (tickerInterval) clearInterval(tickerInterval);
       tickerInterval = setInterval(() => {
-        currentTickerOffset += tickerSpeed * 0.016;
-        currentTickerOffset %= tickerLoopDistance;
+        currentTickerOffset = (currentTickerOffset + tickerSpeed * 0.016) % tickerLoopDistance;
         tickerContent.style.transform = `translate3d(-${currentTickerOffset}px, 0, 0)`;
       }, 16);
-    }
-    
+    };
     initVideosTicker();
     window.addEventListener('resize', initVideosTicker);
-    
-    // ===========================
-    // Ticker Cloning Functions (For non-listen, non-fumbled, non-honey, non-recognize tickers)
-    // ===========================
-    function cloneTickerContent(containerSelector, contentSelector, multiplier) {
-      if (containerSelector.indexOf('listen') !== -1 ||
-          containerSelector.indexOf('fumbled') !== -1 ||
-          containerSelector.indexOf('honey') !== -1 ||
-          containerSelector.indexOf('recognize') !== -1) return;
+
+    // ---------------------------
+    // Ticker Cloning Functions
+    // ---------------------------
+    const cloneTickerContent = (containerSelector, contentSelector, multiplier) => {
+      if (/listen|fumbled|honey|recognize/.test(containerSelector)) return;
       const container = document.querySelector(containerSelector);
       const content = document.querySelector(contentSelector);
       if (!container || !content) return;
@@ -169,9 +148,9 @@
       for (let i = 1; i < copiesNeeded; i++) {
         content.appendChild(template.cloneNode(true));
       }
-    }
-    
-    function cloneHorizontalTickerContent(containerSelector, contentSelector, multiplier) {
+    };
+
+    const cloneHorizontalTickerContent = (containerSelector, contentSelector, multiplier) => {
       const container = document.querySelector(containerSelector);
       const content = document.querySelector(contentSelector);
       if (!container || !content) return;
@@ -187,14 +166,11 @@
       for (let i = 1; i < copiesNeeded; i++) {
         content.appendChild(template.cloneNode(true));
       }
-    }
-    
-    function forceReflow(element) {
-      if (!element) return;
-      void element.offsetHeight;
-    }
-    
-    function initTickers() {
+    };
+
+    const forceReflow = element => { if (element) void element.offsetHeight; };
+
+    const initTickers = () => {
       setTimeout(() => {
         cloneTickerContent('.vertical-ticker.recognize', '.vertical-ticker-content.recognize', 2);
         cloneHorizontalTickerContent('.videos-ticker-wrapper', '.videos-ticker-content', 15);
@@ -203,14 +179,14 @@
           forceReflow(singles);
         }, 500);
       }, 600);
-    }
+    };
     initTickers();
     window.addEventListener("resize", initTickers);
-    
-    // ===========================
-    // Listen Ticker Initialization
-    // ===========================
-    function initListenTicker() {
+
+    // ---------------------------
+    // Vertical Ticker Initializations
+    // ---------------------------
+    const initListenTicker = () => {
       const container = document.querySelector('.vertical-ticker.listen');
       const content = container.querySelector('.vertical-ticker-content.listen');
       const templateHTML = `<p class="ticker-text">
@@ -224,15 +200,11 @@
       const speed = 30;
       const duration = scrollDistance / speed;
       content.style.setProperty('--ticker-duration', duration + 's');
-    }
-    
+    };
     initListenTicker();
     window.addEventListener('resize', initListenTicker);
-    
-    // ===========================
-    // Fumbled Ticker Initialization
-    // ===========================
-    function initFumbledTicker() {
+
+    const initFumbledTicker = () => {
       const container = document.querySelector('.vertical-ticker.fumbled');
       const content = container.querySelector('.vertical-ticker-content.fumbled');
       const templateHTML = `<p class="ticker-text">
@@ -246,15 +218,11 @@
       const speed = 20;
       const duration = scrollDistance / speed;
       content.style.setProperty('--fumbled-duration', duration + 's');
-    }
-    
+    };
     initFumbledTicker();
     window.addEventListener('resize', initFumbledTicker);
-    
-    // ===========================
-    // Honey Ticker Initialization
-    // ===========================
-    function initHoneyTicker() {
+
+    const initHoneyTicker = () => {
       const container = document.querySelector('.vertical-ticker.honey');
       const content = container.querySelector('.vertical-ticker-content.honey');
       const templateHTML = `<p class="ticker-text">
@@ -268,15 +236,11 @@
       const speed = 25;
       const duration = scrollDistance / speed;
       content.style.setProperty('--honey-duration', duration + 's');
-    }
-    
+    };
     initHoneyTicker();
     window.addEventListener('resize', initHoneyTicker);
-    
-    // ===========================
-    // Recognize Ticker Initialization
-    // ===========================
-    function initRecognizeTicker() {
+
+    const initRecognizeTicker = () => {
       const container = document.querySelector('.vertical-ticker.recognize');
       const content = container.querySelector('.vertical-ticker-content.recognize');
       const templateHTML = `<p class="ticker-text">
@@ -290,20 +254,16 @@
       const speed = 20;
       const duration = scrollDistance / speed;
       content.style.setProperty('--recognize-duration', duration + 's');
-    }
-    
+    };
     initRecognizeTicker();
     window.addEventListener('resize', initRecognizeTicker);
-    
-    // ===========================
-    // Intro Section Effects (Fired after Loading Screen is removed)
-    // ===========================
+
+    // ---------------------------
+    // Intro Section Effects (After Loading Screen)
+    // ---------------------------
     function initIntroSection() {
       const codingContainer = document.querySelector('.coding-text');
-      if (!codingContainer) {
-        console.error("No .coding-text element found.");
-        return;
-      }
+      if (!codingContainer) return console.error("No .coding-text element found.");
       const codingParagraph = document.createElement('p');
       codingContainer.appendChild(codingParagraph);
       const codingText = `INIT_SEQUENCE_START; PROTOCOL_OVERRIDE_ACTIVE; QUERY_ADDRESS: NODE_ALPHA_7;
@@ -320,7 +280,7 @@ MESSAGE_ID: 74B39A; RECIPIENT: COMMAND_CENTER_EAST; PRIORITY: HIGH;
 SUBJECT: OPERATIONAL_UPDATE; CONTENT: MISSION_OBJECTIVE_COMPLETE;
 CASUALTIES: ZERO; DAMAGE_ASSESSMENT: MINIMAL; RETURN_ETA: 17:00 HOURS;
 END_TRANSMISSION; REBOOT_SEQUENCE_INITIATED; SYSTEM_RESTORATION_COMPLETE;
-ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;INIT_SEQUENCE_START; PROTOCOL_OVERRIDE_ACTIVE; QUERY_ADDRESS: NODE_ALPHA_7;
+ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS; INIT_SEQUENCE_START; PROTOCOL_OVERRIDE_ACTIVE; QUERY_ADDRESS: NODE_ALPHA_7;
 SYSTEM_DIAGNOSTIC_RUN; CORE_TEMP: 47.3C; VENTILATION_STATUS: OPTIMAL;
 ATMOSPHERIC_PRESSURE: 1013.25hPa; OXYGEN_LEVEL: 20.9%; VISUAL_FEED: ENGAGED;
 AUDIO_FEED: MUTED; TACTILE_FEED: OFFLINE; NETWORK_CONNECTIVITY: ESTABLISHED;
@@ -339,15 +299,15 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
       let visibleText = codingText.slice(-prefillCount);
       codingParagraph.textContent = visibleText;
       let index = 0;
-      function typeLetter() {
+      const typeLetter = () => {
         visibleText += codingText[index];
         codingParagraph.textContent = visibleText;
         index = (index + 1) % codingText.length;
         codingContainer.scrollTop = codingContainer.scrollHeight - codingContainer.clientHeight;
         setTimeout(typeLetter, 30);
-      }
+      };
       typeLetter();
-    
+
       const scrollContainer = document.querySelector('.scroll-text');
       if (scrollContainer) {
         const scrollParagraph = document.createElement('p');
@@ -355,53 +315,44 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
         const scrollText = "SCROLL TO ENTER";
         let scrollIndex = 0;
         let scrollVisibleText = "";
-        function typeScrollLetter() {
+        const typeScrollLetter = () => {
           scrollVisibleText += scrollText[scrollIndex];
           scrollParagraph.innerHTML = scrollVisibleText + '<span class="cursor typing">|</span>';
           scrollIndex++;
           if (scrollIndex < scrollText.length) {
-            const delay = Math.floor(Math.random() * 200) + 150;
-            setTimeout(typeScrollLetter, delay);
+            setTimeout(typeScrollLetter, Math.floor(Math.random() * 200) + 150);
           } else {
             const cursorElem = scrollParagraph.querySelector('.cursor');
             if (cursorElem) cursorElem.classList.remove("typing");
           }
-        }
+        };
         typeScrollLetter();
       }
     }
-    
-    // ===========================
-    // End of Loading and Intro Section Setup
-    // ===========================
-    
-    // ===========================
+
+    // ---------------------------
     // Section Transition & Album Canvas Scrubbing
-    // ===========================
+    // ---------------------------
     let currentSection = "intro";  // "intro", "singles", "videos", "album"
     let accumulatedDelta = 0;
     const threshold = 300;
     const finalRadiusPercent = 150;
     let isTransitioning = false;
     let lockAlbumTransition = true;
-    
+
     const introSection = document.querySelector('.intro-section');
     const singlesSection = document.querySelector('.singles-section');
     const videosSection = document.querySelector('.videos-section');
     const albumSection = document.querySelector('.album-section');
-    
-    // ===========================
-    // Unified Wheel & Touch Event Handling
-    // ===========================
+
     let pendingDelta = 0;
     let scrollScheduled = false;
     let touchStartY = null;
     const deltaMultiplier = 1;
-    
-    function onTouchStart(e) {
-      touchStartY = e.touches[0].clientY;
-    }
-    function onTouchMove(e) {
+
+    // Unified touch event handling
+    const onTouchStart = e => { touchStartY = e.touches[0].clientY; };
+    const onTouchMove = e => {
       if (touchStartY === null) return;
       const deltaY = (touchStartY - e.touches[0].clientY) * deltaMultiplier;
       pendingDelta += deltaY;
@@ -411,15 +362,14 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
         requestAnimationFrame(processWheel);
       }
       e.preventDefault();
-    }
-    function onTouchEnd() {
-      touchStartY = null;
-    }
+    };
+    const onTouchEnd = () => { touchStartY = null; };
     window.addEventListener('touchstart', onTouchStart, { passive: false });
     window.addEventListener('touchmove', onTouchMove, { passive: false });
     window.addEventListener('touchend', onTouchEnd, { passive: false });
-    
-    function onWheel(e) {
+
+    // Unified wheel event handling
+    const onWheel = e => {
       if (isTransitioning) return;
       e.preventDefault();
       let delta = e.deltaY;
@@ -430,20 +380,18 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
         scrollScheduled = true;
         requestAnimationFrame(processWheel);
       }
-    }
+    };
     window.addEventListener('wheel', onWheel, { passive: false });
-    
-    function processWheel() {
+
+    const processWheel = () => {
       scrollScheduled = false;
       if (isTransitioning) { pendingDelta = 0; return; }
       accumulatedDelta += pendingDelta;
       pendingDelta = 0;
-      
       console.log("Section:", currentSection, "Accumulated Delta:", accumulatedDelta);
-      
+
       if (currentSection === "intro") {
-        let progress = accumulatedDelta / threshold;
-        if (progress > 1) progress = 1;
+        let progress = Math.min(accumulatedDelta / threshold, 1);
         singlesSection.style.clipPath = `circle(${progress * finalRadiusPercent}% at center)`;
         if (accumulatedDelta >= threshold) {
           isTransitioning = true;
@@ -462,9 +410,9 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
           accumulatedDelta = 0;
           lockAlbumTransition = true;
           console.log("Transitioned to videos");
-          setTimeout(() => { 
-            isTransitioning = false; 
-            lockAlbumTransition = false; 
+          setTimeout(() => {
+            isTransitioning = false;
+            lockAlbumTransition = false;
           }, 600);
         } else if (accumulatedDelta <= -threshold) {
           isTransitioning = true;
@@ -501,7 +449,6 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
           setTimeout(() => { isTransitioning = false; }, 600);
         }
       }
-      
       if (currentSection === "album") {
         const albumScrubMultiplier = 0.6;
         if (accumulatedDelta !== 0) {
@@ -518,10 +465,12 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
           albumSection.style.transform = "translateY(100%)";
           videosSection.style.transform = "translateY(0%)";
           console.log("Exiting album to videos");
-          document.querySelectorAll('.pop-image, .pop-button').forEach(el => el.style.opacity = 0);
-          document.querySelectorAll('.album-header, .album-outnow, .album-by, .album-icons').forEach(el => el.style.opacity = 1);
-          setTimeout(() => { 
-            isTransitioning = false; 
+          document.querySelectorAll('.pop-image, .pop-button')
+            .forEach(el => el.style.opacity = 0);
+          document.querySelectorAll('.album-header, .album-outnow, .album-by, .album-icons')
+            .forEach(el => el.style.opacity = 1);
+          setTimeout(() => {
+            isTransitioning = false;
             albumSection.style.transition = "";
             videosSection.style.transition = "";
           }, 600);
@@ -529,17 +478,19 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
         }
         accumulatedDelta = 0;
       }
-    }
-    
+    };
+
+    // Mobile: Toggle active state for listen ticker on click
     if (window.innerWidth < 1025) {
       const listenLink = document.querySelector('.vertical-ticker.listen .ticker-link');
       if (listenLink) {
-        listenLink.addEventListener('click', (e) => {
+        listenLink.addEventListener('click', e => {
           e.preventDefault();
           listenLink.classList.toggle('active');
         });
       }
     }
-    
-  });
+  };
+
+  window.addEventListener("load", onLoad);
 })();
