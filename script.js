@@ -226,7 +226,7 @@
       const container = document.querySelector('.vertical-ticker.honey');
       const content = container.querySelector('.vertical-ticker-content.honey');
       const templateHTML = `<p class="ticker-text">
-          <a href="https://www.youtube.com/watch?v=YCtbjXbLPtM" target="_blank" class="ticker-link">Honey I</a>
+          <a href="https://maiyablaney.lnk.to/honeyi" target="_blank" class="ticker-link">Honey I</a>
         </p>`;
       content.innerHTML = templateHTML;
       while (content.offsetHeight < container.offsetHeight * 2) {
