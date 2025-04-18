@@ -81,7 +81,7 @@
 
     // Smooth scrubbing & delayed opacity mapping for PNG sequence
     let albumProgress = 0, targetAlbumProgress = 0;
-    const SMOOTHING_FACTOR = 0.4;
+    const SMOOTHING_FACTOR = 0.8;
     const mapProgress = p => {
       const startDelay = 6 / totalFrames;
       const endDelay   = (totalFrames - 6) / totalFrames;
@@ -338,7 +338,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
     // ---------------------------
     let currentSection = "intro";  // "intro", "singles", "videos", "album"
     let accumulatedDelta = 0;
-    const BASE_THRESHOLD = 300;
+    const BASE_THRESHOLD = 500;
     let threshold = window.innerWidth < 1025 ? BASE_THRESHOLD / 2 : BASE_THRESHOLD;
     let lockAlbumTransition = true;
     let isTransitioning = false;
