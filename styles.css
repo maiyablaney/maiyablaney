@@ -29,7 +29,7 @@ body {
   background: #171740;
   overflow: hidden;
   font-family: 'Digital-7 Mono', monospace;
-  touch-action: none;
+   touch-action: pan-y pinch-zoom;
 }
 
 .overlay {
