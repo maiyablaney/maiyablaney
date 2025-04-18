@@ -529,9 +529,11 @@ body {
 @media (max-width: 540px) {
   .vertical-ticker.listen {
     right: 5%;
+    color: #b0160b;
   }
   .vertical-ticker-content.listen {
     font-size: 35pt;
+    color: #b0160b;
   }
   .vertical-ticker-content.fumbled,
   .vertical-ticker-content.honey {
