@@ -1,4 +1,3 @@
-
 (() => {
   // Wait for the full window load
   const onLoad = () => {
@@ -6,7 +5,7 @@
     // Loading Screen with Iris Transition
     // ---------------------------
     const loadingScreen = document.querySelector('.loading-screen');
-    const loadingCount = document.querySelector('.loading-count');
+    const loadingCount  = document.querySelector('.loading-count');
     let progress = 0;
     const updateLoadingScreen = () => {
       progress++;
@@ -38,10 +37,10 @@
 
     const resizeCanvas = () => {
       if (window.innerWidth < 1025) {
-        albumCanvas.width = window.innerHeight;
+        albumCanvas.width  = window.innerHeight;
         albumCanvas.height = window.innerWidth;
       } else {
-        albumCanvas.width = window.innerWidth;
+        albumCanvas.width  = window.innerWidth;
         albumCanvas.height = window.innerHeight;
       }
     };
@@ -50,7 +49,7 @@
 
     const drawCoverImage = (img, context, cw, ch) => {
       const { width: iw, height: ih } = img;
-      const imgAspect = iw / ih;
+      const imgAspect    = iw / ih;
       const canvasAspect = cw / ch;
       let sx, sy, sw, sh;
       if (imgAspect > canvasAspect) {
@@ -85,9 +84,9 @@
     const SMOOTHING_FACTOR = 0.4;
     const mapProgress = p => {
       const startDelay = 6 / totalFrames;
-      const endDelay = (totalFrames - 6) / totalFrames;
+      const endDelay   = (totalFrames - 6) / totalFrames;
       if (p < startDelay) return 0;
-      if (p > endDelay) return 1;
+      if (p > endDelay)   return 1;
       return (p - startDelay) / (endDelay - startDelay);
     };
 
@@ -112,7 +111,10 @@
     // ---------------------------
     // JS-Driven Videos Ticker Animation
     // ---------------------------
-    let tickerLoopDistance = 0, currentTickerOffset = 0, tickerSpeed = 30, tickerInterval = null;
+    let tickerLoopDistance   = 0,
+        currentTickerOffset  = 0,
+        tickerSpeed          = 30,
+        tickerInterval       = null;
     const tickerContent = document.querySelector('.videos-ticker-content');
 
     const initVideosTicker = () => {
@@ -135,7 +137,7 @@
     const cloneTickerContent = (containerSelector, contentSelector, multiplier) => {
       if (/listen|fumbled|honey|recognize/.test(containerSelector)) return;
       const container = document.querySelector(containerSelector);
-      const content = document.querySelector(contentSelector);
+      const content   = document.querySelector(contentSelector);
       if (!container || !content) return;
       const containerHeight = container.getBoundingClientRect().height || window.innerHeight;
       const firstLine = content.firstElementChild;
@@ -153,7 +155,7 @@
 
     const cloneHorizontalTickerContent = (containerSelector, contentSelector, multiplier) => {
       const container = document.querySelector(containerSelector);
-      const content = document.querySelector(contentSelector);
+      const content   = document.querySelector(contentSelector);
       if (!container || !content) return;
       const containerWidth = container.getBoundingClientRect().width || window.innerWidth;
       const firstChild = content.firstElementChild;
@@ -189,7 +191,7 @@
     // ---------------------------
     const initListenTicker = () => {
       const container = document.querySelector('.vertical-ticker.listen');
-      const content = container.querySelector('.vertical-ticker-content.listen');
+      const content   = container.querySelector('.vertical-ticker-content.listen');
       const templateHTML = `<p class="ticker-text">
           <a href="https://www.google.com" target="_blank" class="ticker-link">Listen</a>
         </p>`;
@@ -207,7 +209,7 @@
 
     const initFumbledTicker = () => {
       const container = document.querySelector('.vertical-ticker.fumbled');
-      const content = container.querySelector('.vertical-ticker-content.fumbled');
+      const content   = container.querySelector('.vertical-ticker-content.fumbled');
       const templateHTML = `<p class="ticker-text">
           <a href="https://maiyablaney.lnk.to/Fumbled" target="_blank" class="ticker-link">Fumbled</a>
         </p>`;
@@ -225,7 +227,7 @@
 
     const initHoneyTicker = () => {
       const container = document.querySelector('.vertical-ticker.honey');
-      const content = container.querySelector('.vertical-ticker-content.honey');
+      const content   = container.querySelector('.vertical-ticker-content.honey');
       const templateHTML = `<p class="ticker-text">
           <a href="https://maiyablaney.lnk.to/honeyi" target="_blank" class="ticker-link">Honey I</a>
         </p>`;
@@ -243,7 +245,7 @@
 
     const initRecognizeTicker = () => {
       const container = document.querySelector('.vertical-ticker.recognize');
-      const content = container.querySelector('.vertical-ticker-content.recognize');
+      const content   = container.querySelector('.vertical-ticker-content.recognize');
       const templateHTML = `<p class="ticker-text">
           <a href="https://www.google.com" target="_blank" class="ticker-link">Recognize Me</a>
         </p>`;
@@ -336,15 +338,19 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
     // ---------------------------
     let currentSection = "intro";  // "intro", "singles", "videos", "album"
     let accumulatedDelta = 0;
-    const threshold = 300;
-    const finalRadiusPercent = 150;
-    let isTransitioning = false;
+    const BASE_THRESHOLD = 300;
+    let threshold = window.innerWidth < 1025 ? BASE_THRESHOLD / 2 : BASE_THRESHOLD;
     let lockAlbumTransition = true;
+    let isTransitioning = false;
 
-    const introSection = document.querySelector('.intro-section');
+    window.addEventListener('resize', () => {
+      threshold = window.innerWidth < 1025 ? BASE_THRESHOLD / 2 : BASE_THRESHOLD;
+    });
+
+    const introSection   = document.querySelector('.intro-section');
     const singlesSection = document.querySelector('.singles-section');
-    const videosSection = document.querySelector('.videos-section');
-    const albumSection = document.querySelector('.album-section');
+    const videosSection  = document.querySelector('.videos-section');
+    const albumSection   = document.querySelector('.album-section');
 
     let pendingDelta = 0;
     let scrollScheduled = false;
@@ -355,7 +361,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
     const onTouchStart = e => { touchStartY = e.touches[0].clientY; };
     const onTouchMove = e => {
       if (touchStartY === null) return;
-      const deltaY = (touchStartY - e.touches[0].clientY) * deltaMultiplier;
+      const deltaY = (touchStartY - e.touches[0].clientY) * (window.innerWidth < 1025 ? 2 : 1);
       pendingDelta += deltaY;
       touchStartY = e.touches[0].clientY;
       if (!scrollScheduled) {
@@ -366,8 +372,8 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
     };
     const onTouchEnd = () => { touchStartY = null; };
     window.addEventListener('touchstart', onTouchStart, { passive: false });
-    window.addEventListener('touchmove', onTouchMove, { passive: false });
-    window.addEventListener('touchend', onTouchEnd, { passive: false });
+    window.addEventListener('touchmove',  onTouchMove,  { passive: false });
+    window.addEventListener('touchend',   onTouchEnd,   { passive: false });
 
     // Unified wheel event handling
     const onWheel = e => {
@@ -376,7 +382,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
       let delta = e.deltaY;
       if (e.deltaMode === 1) delta *= 33;
       else if (e.deltaMode === 2) delta *= window.innerHeight;
-      pendingDelta += delta * deltaMultiplier;
+      pendingDelta += delta;
       if (!scrollScheduled) {
         scrollScheduled = true;
         requestAnimationFrame(processWheel);
@@ -389,56 +395,53 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
       if (isTransitioning) { pendingDelta = 0; return; }
       accumulatedDelta += pendingDelta;
       pendingDelta = 0;
-      console.log("Section:", currentSection, "Accumulated Delta:", accumulatedDelta);
 
+      // Intro → Singles
       if (currentSection === "intro") {
-        let progress = Math.min(accumulatedDelta / threshold, 1);
-        singlesSection.style.clipPath = `circle(${progress * finalRadiusPercent}% at center)`;
+        const prog = Math.min(accumulatedDelta / threshold, 1);
+        singlesSection.style.clipPath = `circle(${prog * 150}% at center)`;
         if (accumulatedDelta >= threshold) {
           isTransitioning = true;
-          singlesSection.style.clipPath = `circle(${finalRadiusPercent}% at center)`;
+          singlesSection.style.clipPath = `circle(150% at center)`;
           introSection.classList.add("dismiss");
           currentSection = "singles";
           accumulatedDelta = 0;
-          console.log("Transitioned to singles");
-          setTimeout(() => { isTransitioning = false; }, 600);
+          setTimeout(() => isTransitioning = false, 600);
         }
-      } else if (currentSection === "singles") {
+      }
+
+      // Singles ↔ Videos
+      else if (currentSection === "singles") {
         if (accumulatedDelta >= threshold) {
           isTransitioning = true;
           videosSection.classList.add("active");
           currentSection = "videos";
           accumulatedDelta = 0;
           lockAlbumTransition = true;
-          console.log("Transitioned to videos");
-          setTimeout(() => {
-            isTransitioning = false;
-            lockAlbumTransition = false;
-          }, 600);
+          setTimeout(() => { isTransitioning = false; lockAlbumTransition = false; }, 600);
         } else if (accumulatedDelta <= -threshold) {
           isTransitioning = true;
           singlesSection.style.clipPath = `circle(0% at center)`;
           introSection.classList.remove("dismiss");
           currentSection = "intro";
           accumulatedDelta = 0;
-          console.log("Returned to intro");
-          setTimeout(() => { isTransitioning = false; }, 600);
+          setTimeout(() => isTransitioning = false, 600);
         }
-      } else if (currentSection === "videos") {
+      }
+
+      // Videos ↔ Album
+      else if (currentSection === "videos") {
         if (accumulatedDelta >= threshold && !lockAlbumTransition) {
           isTransitioning = true;
-          videosSection.style.transition = "transform 0.5s ease-out";
-          albumSection.style.transition = "transform 0.5s ease-out";
-          videosSection.style.transform = "translateY(-100%)";
-          albumSection.style.transform = "translateY(0%)";
+          videosSection.style.transition = albumSection.style.transition = "transform 0.5s ease-out";
+          videosSection.style.transform  = "translateY(-100%)";
+          albumSection.style.transform   = "translateY(0%)";
           currentSection = "album";
           accumulatedDelta = 0;
           targetAlbumProgress = 0;
-          console.log("Transitioned to album (snap)");
           setTimeout(() => {
             isTransitioning = false;
-            videosSection.style.transition = "";
-            albumSection.style.transition = "";
+            videosSection.style.transition = albumSection.style.transition = "";
           }, 600);
         } else if (accumulatedDelta <= -threshold) {
           isTransitioning = true;
@@ -446,34 +449,29 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
           albumSection.style.transform = "translateY(100%)";
           currentSection = "singles";
           accumulatedDelta = 0;
-          console.log("Returned to singles from videos");
-          setTimeout(() => { isTransitioning = false; }, 600);
+          setTimeout(() => isTransitioning = false, 600);
         }
       }
+
+      // Album → Videos via overscroll
       if (currentSection === "album") {
-        const albumScrubMultiplier = 0.6;
         if (accumulatedDelta !== 0) {
-          targetAlbumProgress += (accumulatedDelta / threshold) * albumScrubMultiplier;
+          targetAlbumProgress += (accumulatedDelta / threshold) * 0.6;
           targetAlbumProgress = Math.max(0, Math.min(1, targetAlbumProgress));
-          console.log("Album target progress:", targetAlbumProgress.toFixed(2));
         }
         if (targetAlbumProgress <= 0.01 && accumulatedDelta <= -threshold * 0.1) {
           isTransitioning = true;
           currentSection = "videos";
           accumulatedDelta = 0;
-          albumSection.style.transition = "transform 0.5s ease-out";
-          videosSection.style.transition = "transform 0.5s ease-out";
-          albumSection.style.transform = "translateY(100%)";
+          albumSection.style.transition = videosSection.style.transition = "transform 0.5s ease-out";
+          albumSection.style.transform  = "translateY(100%)";
           videosSection.style.transform = "translateY(0%)";
-          console.log("Exiting album to videos");
-          document.querySelectorAll('.pop-image, .pop-button')
-            .forEach(el => el.style.opacity = 0);
+          document.querySelectorAll('.pop-image, .pop-button').forEach(el => el.style.opacity = 0);
           document.querySelectorAll('.album-header, .album-outnow, .album-by, .album-icons')
             .forEach(el => el.style.opacity = 1);
           setTimeout(() => {
             isTransitioning = false;
-            albumSection.style.transition = "";
-            videosSection.style.transition = "";
+            albumSection.style.transition = videosSection.style.transition = "";
           }, 600);
           targetAlbumProgress = 0;
         }
@@ -481,7 +479,7 @@ ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
       }
     };
 
-    // Mobile: Toggle active state for listen ticker on click
+    // Mobile: Toggle Listen ticker on tap
     if (window.innerWidth < 1025) {
       const listenLink = document.querySelector('.vertical-ticker.listen .ticker-link');
       if (listenLink) {
