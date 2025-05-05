@@ -1,3 +1,4 @@
+
 (() => {
   // Wait for the full window load
   const onLoad = () => {
@@ -193,7 +194,7 @@
       const container = document.querySelector('.vertical-ticker.listen');
       const content   = container.querySelector('.vertical-ticker-content.listen');
       const templateHTML = `<p class="ticker-text">
-          <a href="https://www.google.com" target="_blank" class="ticker-link">Listen</a>
+          <a>Listen</a>
         </p>`;
       content.innerHTML = templateHTML;
       while (content.offsetHeight < container.offsetHeight * 2) {
@@ -218,7 +219,7 @@
         content.innerHTML += templateHTML;
       }
       const scrollDistance = content.offsetHeight / 2;
-      const speed = 20;
+      const speed = 25;
       const duration = scrollDistance / speed;
       content.style.setProperty('--fumbled-duration', duration + 's');
     };
@@ -254,7 +255,7 @@
         content.innerHTML += templateHTML;
       }
       const scrollDistance = content.offsetHeight / 2;
-      const speed = 20;
+      const speed = 25;
       const duration = scrollDistance / speed;
       content.style.setProperty('--recognize-duration', duration + 's');
     };
@@ -298,7 +299,7 @@ SUBJECT: OPERATIONAL_UPDATE; CONTENT: MISSION_OBJECTIVE_COMPLETE;
 CASUALTIES: ZERO; DAMAGE_ASSESSMENT: MINIMAL; RETURN_ETA: 17:00 HOURS;
 END_TRANSMISSION; REBOOT_SEQUENCE_INITIATED; SYSTEM_RESTORATION_COMPLETE;
 ALL_SYSTEMS_NOMINAL; STATUS_REPORT: GREEN; AWAITING_FURTHER_INSTRUCTIONS;`;
-      const prefillCount = 2000;
+      const prefillCount = 2100;
       let visibleText = codingText.slice(-prefillCount);
       codingParagraph.textContent = visibleText;
       let index = 0;
