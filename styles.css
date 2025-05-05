@@ -533,15 +533,18 @@ body {
     color: #b0160b;
   }
   .vertical-ticker-content.listen {
-    font-size: 32pt;
+    font-size: 35pt;
     color: #b0160b;
+    animation: scrollDown var(--ticker-duration, 50s) linear infinite;
   }
   .vertical-ticker-content.fumbled,
   .vertical-ticker-content.honey {
     font-size: 20pt;
+    animation: scrollDown var(--ticker-duration, 20s) linear infinite;
   }
   .vertical-ticker-content.recognize {
-    font-size: 20pt;
+    font-size: 17pt;
+    animation: scrollDown var(--ticker-duration, 20s) linear infinite;
   }
 }
 
