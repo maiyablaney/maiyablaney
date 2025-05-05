@@ -1,5 +1,6 @@
 
 
+
 /* Font Imports & Global Resets */
 @font-face {
   font-family: 'Digital-7 Mono';
@@ -363,9 +364,9 @@ body {
   font-family: 'Digital-7 Mono', monospace;
   font-size: 50pt;
   line-height: 1;
-  color: #FFF2D5;
+  color:  #b0160b;
   /* The content will be dynamically tall via JS cloning */
-  animation: scrollDown var(--ticker-duration, 10s) linear infinite;
+  animation: scrollDown var(--ticker-duration, 19s) linear infinite;
 }
 
 /* Keyframes for downward scrolling (content moves from top to bottom) */
@@ -397,11 +398,11 @@ body {
 }
 .vertical-ticker-content.fumbled {
   font-family: 'Digital-7 Mono', monospace;
-  font-size: 27pt;
+  font-size: 32pt;
   line-height: 1;
   color: #FFF2D5;
   /* Use the dynamically set duration via CSS variable --fumbled-duration */
-  animation: scrollDownFumbled var(--fumbled-duration, 15s) linear infinite;
+  animation: scrollDownFumbled var(--fumbled-duration, 19s) linear infinite;
 }
 
 /* Keyframes for downward scrolling for Fumbled ticker */
@@ -441,7 +442,7 @@ body {
   line-height: 1;
   color: #FFF2D5;
   /* Use the dynamically set duration via CSS variable --honey-duration */
-  animation: scrollDownHoney var(--honey-duration, 17s) linear infinite;
+  animation: scrollDownHoney var(--honey-duration, 19s) linear infinite;
 }
 
 @keyframes scrollDownHoney {
@@ -477,7 +478,7 @@ body {
 }
 .vertical-ticker-content.recognize {
   font-family: 'Digital-7 Mono', monospace;
-  font-size: 27pt;
+  font-size: 32pt;
   line-height: 1;
   color: #FFF2D5;
   /* Use the dynamically set duration via CSS variable --recognize-duration */
@@ -532,7 +533,7 @@ body {
     color: #b0160b;
   }
   .vertical-ticker-content.listen {
-    font-size: 35pt;
+    font-size: 32pt;
     color: #b0160b;
   }
   .vertical-ticker-content.fumbled,
@@ -540,7 +541,7 @@ body {
     font-size: 20pt;
   }
   .vertical-ticker-content.recognize {
-    font-size: 17pt;
+    font-size: 20pt;
   }
 }
 
@@ -847,6 +848,7 @@ body {
   pointer-events: none;
 }
 .album-icons {
+  display: none !important;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1042,4 +1044,3 @@ body {
   color: #FFF2D5;
   z-index: 2;
 }
-
