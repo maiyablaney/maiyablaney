@@ -248,7 +248,7 @@
       const container = document.querySelector('.vertical-ticker.recognize');
       const content   = container.querySelector('.vertical-ticker-content.recognize');
       const templateHTML = `<p class="ticker-text">
-          <a href="https://www.google.com" target="_blank" class="ticker-link">Recognize Me</a>
+          <a href="https://maiyablaney.lnk.to/ARoomWithADoorThatCloses" target="_blank" class="ticker-link">Recognize Me</a>
         </p>`;
       content.innerHTML = templateHTML;
       while (content.offsetHeight < container.offsetHeight * 2) {
