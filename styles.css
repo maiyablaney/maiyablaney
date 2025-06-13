@@ -845,7 +845,6 @@ body {
   pointer-events: none;
 }
 .album-icons {
-  display: none !important;
   display: flex;
   justify-content: center;
   align-items: center;
