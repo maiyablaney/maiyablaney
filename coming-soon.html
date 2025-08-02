@@ -4,9 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="robots" content="noindex" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/images/favicon.png">
-  <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="assets/images/favicon.png">
-  <title>Maiya Blaney</title>
+  <title>Maiya Blaney Tour Dates</title>
 
   <style>
     @font-face {
@@ -33,66 +31,111 @@
       padding: 0 2vw;
     }
 
-    /* 1) TO DO: Make “TOUR DATES” the largest */
     h1 {
-      font-size: 8vw;       /* bigger across all screens */
-      margin-bottom: 0.4em; /* tighten under it */
+      font-size: 8vw;
+      margin-bottom: 0.4em;
     }
 
-    /* 2) BYLINE smallest, sitting closer under TOUR DATES than dates */
     .byline {
-      font-size: 3.5vw;     /* smaller than city/date */
-      margin-bottom: 1em;   /* reduced gap above dates */
+      font-size: 3.5vw;
+      margin-bottom: 1em;
     }
 
-    /* 3) City/date medium size */
-    .dates-list p {
-      margin: 0.6em 0;      /* tighten vertical rhythm */
-      font-size: 6vw;       /* larger on phones, medium on desktop */
+    .dates-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8em;
     }
 
-    .dates-list a {
-      color: inherit;
+    .date-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6em 1em;
+      border: 2px solid #FFF2D5;
+      border-radius: 8px;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+    .date-item:hover {
+      border-color: #88F971;
+      background-color: rgba(136, 249, 113, 0.1);
+    }
+
+    .date-item .city-date {
+      font-size: 6vw;
+    }
+    .date-item .ticket-btn {
+      font-size: 4vw;
+      padding: 0.3em 0.6em;
+      border: 2px solid #FFF2D5;
+      border-radius: 6px;
       text-decoration: none;
-      transition: color 0.3s ease;
+      color: inherit;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
     }
-    .dates-list a:hover,
-    .dates-list a:active {
-      color: #88F971;
+    .date-item .ticket-btn:hover {
+      background-color: #88F971;
+      border-color: #88F971;
+      color: #000;
     }
 
-    /* Desktop overrides */
     @media (min-width: 600px) {
-      h1 {
-        font-size: 6vw;
-      }
-      .byline {
-        font-size: 2.5vw;
-      }
-      .dates-list p {
-        font-size: 4vw;
-      }
+      h1 { font-size: 6vw; }
+      .byline { font-size: 2.5vw; }
+      .date-item .city-date { font-size: 4vw; }
+      .date-item .ticket-btn { font-size: 2.5vw; }
     }
-
-    /* Mobile tweaks */
     @media (max-width: 600px) {
-      h1 {
-        font-size: 10vw;
-        margin-bottom: 0.3em;
-      }
-      .byline {
-        font-size: 4.5vw;
-        margin-bottom: 0.8em;
-      }
-      .dates-list p {
-        font-size: 7vw;
-      }
+      h1 { font-size: 10vw; margin-bottom: 0.3em; }
+      .byline { font-size: 4.5vw; margin-bottom: 0.8em; }
+      .date-item .city-date { font-size: 7vw; }
+      .date-item .ticket-btn { font-size: 5vw; }
     }
   </style>
-
 </head>
 
 <body>
-  <h1>COMING SOON</h1>
+  <div class="container">
+    <h1>TOUR DATES</h1>
+    <div class="byline">Maiya Opens for Fazerdaze</div>
+
+    <div class="dates-list">
+      <div class="date-item">
+        <div class="city-date">Philly 09/19</div>
+        <a class="ticket-btn"
+           href="https://www.etix.com/ticket/p/45787393/fazerdaze-philadelphia-johnny-brendas?clickref=1100lBkWhbvf&app_clickref=1100lBkWhbvf"
+           target="_blank" rel="noopener">
+          TICKETS
+        </a>
+      </div>
+
+      <div class="date-item">
+        <div class="city-date">DC 09/20</div>
+        <a class="ticket-btn"
+           href="https://www.etix.com/ticket/p/45787393/fazerdaze-philadelphia-johnny-brendas?clickref=1100lBkWhbvf&app_clickref=1100lBkWhbvf"
+           target="_blank" rel="noopener">
+          TICKETS
+        </a>
+      </div>
+
+      <div class="date-item">
+        <div class="city-date">NYC 09/21</div>
+        <a class="ticket-btn"
+           href="https://www.ticketmaster.com/event/000062ADBB8F397F?irgwc=1&clickid=ySny4M1%3AKxycWZORlPUSZwS0Ukp0-QUMETebzA0&camefrom=CFC_BUYAT_219208&impradid=219208&REFERRAL_ID=tmfeedbuyat219208&wt.mc_id=aff_BUYAT_219208&utm_source=219208-Bandsintown&impradname=Bandsintown&utm_medium=affiliate&ircid=4272"
+           target="_blank" rel="noopener">
+          TICKETS
+        </a>
+      </div>
+
+      <div class="date-item">
+        <div class="city-date">Boston 09/23</div>
+        <a class="ticket-btn"
+           href="https://wl.eventim.us/event/fazerdaze/650278?afflky=GetToTheGig&nts_trk=238e90ef-2f58-4443-b769-65155c30c244"
+           target="_blank" rel="noopener">
+          TICKETS
+        </a>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
