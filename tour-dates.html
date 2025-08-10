@@ -30,31 +30,55 @@
     .container {
       max-width: 90vw;
     }
+
     h1 {
-      font-size: 6vw;
-      margin-bottom: 0.5em;
+      font-size: 8vw;
+      margin-bottom: 0rem;
     }
+
     .byline {
       font-size: 3vw;
       margin-bottom: 1.5em;
     }
-    .dates-list p {
-      margin: 0.75em 0;
+
+    .dates-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+      align-items: center;
+    }
+
+    .date-item {
       font-size: 4vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4em;
     }
-    .dates-list a {
-      color: inherit;
+
+    .ticket-button {
+      font-size: 2.5vw;
+      background-color: transparent;
+      border: 1px solid #FFF2D5;
+      padding: 0.3em 0.8em;
+      color: #FFF2D5;
+      cursor: pointer;
+      transition: all 0.3s ease;
       text-decoration: none;
-      transition: color 0.3s ease;
+      display: inline-block;
     }
-    .dates-list a:hover,
-    .dates-list a:active {
-      color: #88F971;
+
+    .ticket-button:hover {
+      background-color: #88F971;
+      color: #000;
+      border-color: #88F971;
     }
+
     @media (max-width: 600px) {
       h1 { font-size: 8vw; }
       .byline { font-size: 4.5vw; }
-      .dates-list p { font-size: 6vw; }
+      .date-item { font-size: 6vw; }
+      .ticket-button { font-size: 4vw; }
     }
   </style>
 </head>
@@ -65,30 +89,35 @@
     <div class="byline">Maiya Opens for Fazerdaze</div>
 
     <div class="dates-list">
-      <p>
-        <a href="https://www.etix.com/ticket/p/45787393/fazerdaze-philadelphia-johnny-brendas?clickref=1100lBkWhbvf&app_clickref=1100lBkWhbvf"
-           target="_blank" rel="noopener">
-          Philly 09/19
+
+      <div class="date-item">
+        Philly 09/19
+        <a class="ticket-button" href="https://www.etix.com/ticket/p/45787393/fazerdaze-philadelphia-johnny-brendas?clickref=1100lBkWhbvf&app_clickref=1100lBkWhbvf" target="_blank" rel="noopener">
+          Tickets
         </a>
-      </p>
-      <p>
-        <a href="https://www.etix.com/ticket/p/45787393/fazerdaze-philadelphia-johnny-brendas?clickref=1100lBkWhbvf&app_clickref=1100lBkWhbvf"
-           target="_blank" rel="noopener">
-          DC 09/20
+      </div>
+
+      <div class="date-item">
+        DC 09/20
+        <a class="ticket-button" href="https://www.etix.com/ticket/p/45787393/fazerdaze-philadelphia-johnny-brendas?clickref=1100lBkWhbvf&app_clickref=1100lBkWhbvf" target="_blank" rel="noopener">
+          Tickets
         </a>
-      </p>
-      <p>
-        <a href="https://www.ticketmaster.com/event/000062ADBB8F397F?irgwc=1&clickid=ySny4M1%3AKxycWZORlPUSZwS0Ukp0-QUMETebzA0&camefrom=CFC_BUYAT_219208&impradid=219208&REFERRAL_ID=tmfeedbuyat219208&wt.mc_id=aff_BUYAT_219208&utm_source=219208-Bandsintown&impradname=Bandsintown&utm_medium=affiliate&ircid=4272"
-           target="_blank" rel="noopener">
-          NYC 09/21
+      </div>
+
+      <div class="date-item">
+        NYC 09/21
+        <a class="ticket-button" href="https://www.ticketmaster.com/event/000062ADBB8F397F?irgwc=1&clickid=ySny4M1%3AKxycWZORlPUSZwS0Ukp0-QUMETebzA0&camefrom=CFC_BUYAT_219208&impradid=219208&REFERRAL_ID=tmfeedbuyat219208&wt.mc_id=aff_BUYAT_219208&utm_source=219208-Bandsintown&impradname=Bandsintown&utm_medium=affiliate&ircid=4272" target="_blank" rel="noopener">
+          Tickets
         </a>
-      </p>
-      <p>
-        <a href="https://wl.eventim.us/event/fazerdaze/650278?afflky=GetToTheGig&nts_trk=238e90ef-2f58-4443-b769-65155c30c244"
-           target="_blank" rel="noopener">
-          Boston 09/23
+      </div>
+
+      <div class="date-item">
+        Boston 09/23
+        <a class="ticket-button" href="https://wl.eventim.us/event/fazerdaze/650278?afflky=GetToTheGig&nts_trk=238e90ef-2f58-4443-b769-65155c30c244" target="_blank" rel="noopener">
+          Tickets
         </a>
-      </p>
+      </div>
+
     </div>
   </div>
 </body>
