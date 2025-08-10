@@ -20,65 +20,60 @@
       background-color: #000;
       color: #FFF2D5;
       font-family: 'Digital-7 Mono', monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       min-height: 100vh;
       text-align: center;
     }
 
     .container {
-      width: 100%;
-      padding: 3rem 1rem;
-      box-sizing: border-box;
+      max-width: 90vw;
     }
 
     h1 {
-      font-size: 3rem;
-      margin-bottom: 0.2em;
+      font-size: 6vw;
+      margin-bottom: 0.5em;
     }
 
     .byline {
-      font-size: 1.3rem;
+      font-size: 3vw;
       margin-bottom: 2em;
     }
 
-    .dates-list {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-      align-items: center;
+    .date-block {
+      margin-bottom: 2em;
     }
 
     .date-item {
-      font-size: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5em;
+      font-size: 4vw;
+      margin-bottom: 0.5em;
     }
 
     .ticket-button {
-      font-size: 1rem;
-      background-color: transparent;
-      border: 1px solid #FFF2D5;
-      padding: 0.4em 1.2em;
-      color: #FFF2D5;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
       display: inline-block;
+      padding: 0.4em 1.5em;
+      border: 2px solid #FFF2D5;
+      background: transparent;
+      color: #FFF2D5;
+      font-family: 'Digital-7 Mono', monospace;
+      font-size: 2vw;
+      text-decoration: none;
+      transition: all 0.3s ease;
     }
 
-    .ticket-button:hover {
+    .ticket-button:hover,
+    .ticket-button:active {
       background-color: #88F971;
       color: #000;
       border-color: #88F971;
     }
 
-    /* Mobile tweaks */
     @media (max-width: 600px) {
-      h1 { font-size: 2.2rem; }
-      .byline { font-size: 1.1rem; }
-      .date-item { font-size: 1.6rem; }
-      .ticket-button { font-size: 0.9rem; padding: 0.4em 1em; }
+      h1 { font-size: 8vw; }
+      .byline { font-size: 4.5vw; }
+      .date-item { font-size: 6vw; }
+      .ticket-button { font-size: 4vw; padding: 0.4em 1.2em; }
     }
   </style>
 </head>
@@ -88,36 +83,24 @@
     <h1>TOUR DATES</h1>
     <div class="byline">Maiya Opens for Fazerdaze</div>
 
-    <div class="dates-list">
+    <div class="date-block">
+      <div class="date-item">PHILLY 09/19</div>
+      <a class="ticket-button" href="https://www.etix.com/ticket/p/45787393/fazerdaze-philadelphia-johnny-brendas?clickref=1100lBkWhbvf&app_clickref=1100lBkWhbvf" target="_blank" rel="noopener">TICKETS</a>
+    </div>
 
-      <div class="date-item">
-        Philly 09/19
-        <a class="ticket-button" href="https://www.etix.com/ticket/p/45787393/fazerdaze-philadelphia-johnny-brendas?clickref=1100lBkWhbvf&app_clickref=1100lBkWhbvf" target="_blank" rel="noopener">
-          Tickets
-        </a>
-      </div>
+    <div class="date-block">
+      <div class="date-item">DC 09/20</div>
+      <a class="ticket-button" href="https://www.etix.com/ticket/p/45787393/fazerdaze-philadelphia-johnny-brendas?clickref=1100lBkWhbvf&app_clickref=1100lBkWhbvf" target="_blank" rel="noopener">TICKETS</a>
+    </div>
 
-      <div class="date-item">
-        DC 09/20
-        <a class="ticket-button" href="https://www.etix.com/ticket/p/45787393/fazerdaze-philadelphia-johnny-brendas?clickref=1100lBkWhbvf&app_clickref=1100lBkWhbvf" target="_blank" rel="noopener">
-          Tickets
-        </a>
-      </div>
+    <div class="date-block">
+      <div class="date-item">NYC 09/21</div>
+      <a class="ticket-button" href="https://www.ticketmaster.com/event/000062ADBB8F397F?irgwc=1&clickid=ySny4M1%3AKxycWZORlPUSZwS0Ukp0-QUMETebzA0&camefrom=CFC_BUYAT_219208&impradid=219208&REFERRAL_ID=tmfeedbuyat219208&wt.mc_id=aff_BUYAT_219208&utm_source=219208-Bandsintown&impradname=Bandsintown&utm_medium=affiliate&ircid=4272" target="_blank" rel="noopener">TICKETS</a>
+    </div>
 
-      <div class="date-item">
-        NYC 09/21
-        <a class="ticket-button" href="https://www.ticketmaster.com/event/000062ADBB8F397F?irgwc=1&clickid=ySny4M1%3AKxycWZORlPUSZwS0Ukp0-QUMETebzA0&camefrom=CFC_BUYAT_219208&impradid=219208&REFERRAL_ID=tmfeedbuyat219208&wt.mc_id=aff_BUYAT_219208&utm_source=219208-Bandsintown&impradname=Bandsintown&utm_medium=affiliate&ircid=4272" target="_blank" rel="noopener">
-          Tickets
-        </a>
-      </div>
-
-      <div class="date-item">
-        Boston 09/23
-        <a class="ticket-button" href="https://wl.eventim.us/event/fazerdaze/650278?afflky=GetToTheGig&nts_trk=238e90ef-2f58-4443-b769-65155c30c244" target="_blank" rel="noopener">
-          Tickets
-        </a>
-      </div>
-
+    <div class="date-block">
+      <div class="date-item">BOSTON 09/23</div>
+      <a class="ticket-button" href="https://wl.eventim.us/event/fazerdaze/650278?afflky=GetToTheGig&nts_trk=238e90ef-2f58-4443-b769-65155c30c244" target="_blank" rel="noopener">TICKETS</a>
     </div>
   </div>
 </body>
